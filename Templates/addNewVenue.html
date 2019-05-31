@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Adding New Venue{% endblock %}
+
+{% block body %}
+<div class="container col-lg-3 col-md-6 col-sm-12" centered>
+    <form action="#" method="POST">
+        <div class="form-group">
+            <label for="venueName">Name</label><br>
+            <input class="form-control" autofocus required id="venueName" name="venueName"><br>
+            <label for="venueAddress1">Address 1</label><br>
+            <input class="form-control" required id="venueAddress1" name="venueAddress1"><br>
+            <label for="venueAddress2">Address 2</label><br>
+            <input class="form-control" required id="venueAddress2" name="venueAddress2"><br>
+            <label for="venueCity">City</label><br>
+            <input class="form-control" required id="venueCity" name="venueCity"><br>
+            <label for="state">State</label><br>
+            <input class="form-control" required id="state" name="state"><br>
+            <label for="zip">Zip Code</label><br>
+            <input class="form-control" required id="zip" name="zip"><br>
+            <label for="capacity">Capacity</label><br>
+            <input class="form-control" required id="capacity" name="capacity"><br>
+            <button type="submit" class="btn btn-success">Create</button>
+        </div>
+    </form>
+</div>
+{%endblock %}
+
+{% block script %}{% endblock %}
