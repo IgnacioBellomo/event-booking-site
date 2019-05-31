@@ -32,7 +32,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///eventManager.db")
+db = SQL("sqlite:///bookThatThang.db")
 
 @app.route("/")
 def index():
