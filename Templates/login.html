@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block body %}
+    <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+        <br><h6>{{msg}}</h6><br>
+    </div>
+    <div>
+        {% if session %}
+            <div centered>
+            <p>You are logged in as the following user:</p>
+            <h4>{{session['user_email']}}</h4>
+            </div>
+            <form class="d-inline-block" action="/logout" method="GET">
+            <div>
+                <button type="submit">Logout</button>
+            </div>
+            <form action="/" class="d-inline-block" method="GET">
+            <div>
+                <button type="submit">Home</button>
+            </div>
+        {% else %}
+                <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+                <form action="/login" method="POST">
+                    <div class="form-group">
+                        <label for="user_email">Email Address</label>
+                        <input class="form-control" id="email" placeholder="Enter email" type="text" name="email"><br>
+                        <label for="user_password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter password" name="password"><br>
+                        <button type="submit" class="btn btn-success">Login</button>
+                    </div>
+                </form>
+                </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block script %}{% endblock %}

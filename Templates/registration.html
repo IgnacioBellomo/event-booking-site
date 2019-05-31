@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block body %}
+    <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+        <br><h6>{{msg}}</h6><br>
+    </div>
+        {% if session %}
+            <p>You are already registered as the following user:</p>
+            <h4>{{session['user_name']}}</h4>
+        {% else %}
+            <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+                <form action="/register" method="POST" name="registration">
+                <div class="form-group">
+                    <label for="fname">First Name</label>
+                    <input class="form-control" id="fname" type="text" name="fname">
+                    <label for="lname">Last Name</label>
+                    <input class="form-control" id="lname" type="text" name="lname">
+                    <label for="email">Email Address</label>
+                    <input class="form-control" id="email" type="text" name="email">
+                    <label for="password">Password</label>
+                    <input class="form-control" id="password" type="password" name="password" placeholder="At least 8 characters">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input class="form-control" id="confirmPassword" type="password" name="confirmPassword">
+                </div>
+                    <button type="submit" class="btn btn-success" id="submit">Register</button>
+            </div>
+        {% endif %}
+
+{% endblock %}
+
+{% block script %}{% endblock %}
