@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Venues{% endblock %}
+
+{% block body %}
+
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Venue Id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Capacity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for # in # %}
+    <tr>
+      <th scope="row">{{#.venueID}}</th>
+      <td scope="row"><a href="#">{{#.name}}</a></td>
+      <td scope="row">{{#.address1}}, {{#.address2}}, {{#.city}}, {{#.state}}, {{#.zip}}</td>
+      <td scope="row">{{#.capacity}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
+
+{% block script %}{% endblock %}

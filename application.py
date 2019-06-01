@@ -116,7 +116,7 @@ def event(eventId):
 
     if request.method == "GET":
 
-    """
+        """
 
         if eventId is not null:
 
@@ -129,11 +129,11 @@ def event(eventId):
 
             apology("unable to find this event")
 
-    """
+        """
 
     elif request.method == "POST":
 
-    """
+        """
 
         Save results of ticket quantity change inside DB
 
@@ -145,15 +145,15 @@ def event(eventId):
 
             redirect("/thank-you.html", msg="your tickets for (eventTitle) have been saved")
 
-    """
+        """
 
-@app.route("/my-reservations, methods=["GET"])
+@app.route("/my-reservations", methods=["GET"])
 @login_required
 def myReservations():
 
-    """
+        """
         Query DB for all reservations belonging to USER and display them in a table with related info
 
         if user clicks on a row or link of an event, a get request will go out with the varible in the URL
 
-    """
+        """

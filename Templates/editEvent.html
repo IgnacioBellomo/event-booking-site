@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block body %}
+
+    <br>
+    <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+    <div >
+        Event #{{#.eventID}}
+    </div><br>
+<form action="#" method="POST">
+        <div class="form-group">
+            <label for="eventName">Event Name</label><br>
+            <input class="form-control" autofocus required id="eventName" name="eventName" value='{{#.name}}'><br>
+            <label for="venues">Venue</label><br>
+            <p name="venues" id="venues">{{#.venueID}}</p><br>
+            <label for="eventType">Event Type</label><br>
+            <p name="eventType" id="eventType">{{#.eventType}}</p><br>
+            <label for="eventStartDate">Event Start Date</label><br>
+            <p id="eventStartDate" name="eventStartDate">{{#.startDate}}</p>
+            <label for="eventStartTime">Event Start Time</label><br>
+            <p id="eventStartTime" name="eventStartTime">{{#.startTime}}</p>
+            <label for="eventEndDate">Event End Date</label><br>
+            <p id="eventEndDate" name="eventEndDate">{{#.EndDate}}</p>
+            <label for="eventEndTime">Event End Time</label><br>
+            <p id="eventEndTime" name="eventEndTime">{{#.EndTime}}</p>
+            <label for="tickets">Total Tikets</label><br>
+            <input class="form-control" required id="tickets" name="tickets" value='{{#.tickets}}'><br>
+            <label for="eventDescription">Description</label><br>
+            <textarea class="form-control" rows="10" cols="50" id="eventDescription" name="eventDescription">{{#.description}}</textarea><br>
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+    </form>
+    </div>
+
+
+{%endblock %}
+
+{% block script %}{% endblock %}

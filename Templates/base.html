@@ -13,6 +13,36 @@
 </head>
 
 <body>
+    <main>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-link"><a href="{{ url_for('#') }}">#</a></li>
+          <li class="nav-item active">
+            <div class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                User
+              </a>
+              {% if session %}
+              <p>{{session['user_id']}}</p>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="{{ url_for('#') }}">My Profile</a>
+                <a class="dropdown-item" href="{{ url_for('myReservations') }}">My Reservations</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+              </div>
+              {% else %}
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ url_for('login') }}">Login</a>
+                <a class="dropdown-item" href="{{ url_for('registrer') }}">Register</a>
+              </div>
+              {% endif %}
+            </div>
+          </li>
+        </ul>
+      </div>
+      </nav>
+
     {% block body %}{% endblock %}
     {% block script %}{% endblock %}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -24,6 +54,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    </main>
 </body>
 
 </html>

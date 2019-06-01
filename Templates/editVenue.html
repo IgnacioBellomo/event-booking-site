@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Venue{% endblock %}
+
+{% block body %}
+    <br>
+    <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+    <div >
+        Venue #{{#.venueID}}
+    </div><br>
+<div class="container col-lg-3 col-md-6 col-sm-12" centered>
+    <form action="#" method="POST">
+        <div class="form-group">
+            <label for="venueName">Name</label><br>
+            <input class="form-control" autofocus required id="venueName" name="venueName" value='{{#.name}}'><br>
+            <label for="venueAddress1">Address 1</label><br>
+            <p id="venueAddress1" name="venueAddress1">{{#.address1}}</p><br>
+            <label for="venueAddress2">Address 2</label><br>
+            <p id="venueAddress2" name="venueAddress2">{{#.address2}}</p><br>
+            <label for="venueCity">City</label><br>
+            <p id="venueCity" name="venueCity">{{#.city}}</p><br>
+            <label for="state">State</label><br>
+            <p id="state" name="state">{{#.state}}</p><br>
+            <label for="zip">Zip Code</label><br>
+            <p id="zip" name="zip">{{#.zip}}</p><br>
+            <label for="capacity">Capacity</label><br>
+            <input class="form-control" required id="capacity" name="capacity" value='{{#.capacity}}'><br>
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+    </form>
+</div>
+{%endblock %}
+
+{% block script %}{% endblock %}

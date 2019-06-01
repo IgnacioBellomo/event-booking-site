@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Reservations{% endblock %}
+
+{% block body %}
+
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Created</th>
+      <th scope="col">Conf #</th>
+      <th scope="col">Name</th>
+      <th scope="col">Venue</th>
+      <th scope="col">Event</th>
+      <th scope="col">Event Day</th>
+      <th scope="col">Event Time</th>
+      <th scope="col">Number of Tickets</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for # in # %}
+    <tr>
+      <th scope="row">{{#.tranID}}</th>
+      <th scope="row">{{#.time}}</th>
+      <th scope="row">{{#.confirmation}}</th>
+      <td scope="row">{{#.fname}} {{#.lname}}</td>
+      <td scope="row">{{#.venueID}}</td>
+      <td scope="row">{{#.eventID}}</td>
+      <td scope="row">{{#.startDate}}</td>
+      <td scope="row">{{#.startTime}}</td>
+      <td scope="row">{{#.tickets}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
+
+{% block script %}{% endblock %}
