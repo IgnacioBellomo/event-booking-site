@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}My Reservations{% endblock %}
+
+{% block body %}
+
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Booked</th>
+      <th scope="col">Conf #</th>
+      <th scope="col">Event</th>
+      <th scope="col">Venue</th>
+      <th scope="col">Address</th>
+      <th scope="col">Event Day</th>
+      <th scope="col">Event Time</th>
+      <th scope="col">Number of Tickets</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for # in # %}
+    <tr>
+      <th scope="row">{{#.time}}</th>
+      <th scope="row">{{#.confirmation}}</th>
+      <td scope="row">{{#.eventName}}</td>
+      <td scope="row">{{#.venuenName}}</td>
+      <td scope="row">{{#.address1}}, {{#.address2}}, {{#.city}}, {{#.state}}, {{#.zip}}</td>
+      <td scope="row">{{#.startDate}}</td>
+      <td scope="row">{{#.startTime}}</td>
+      <td scope="row">{{#.tickets}}</td>
+      <td scope="row"><a href="#">Change</a></td>
+      <td scope="row"><a href="#">Cancel</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{%endblock %}
+
+{% block script %}{% endblock %}

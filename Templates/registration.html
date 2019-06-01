@@ -10,21 +10,21 @@ Register
     </div>
         {% if session %}
             <p>You are already registered as the following user:</p>
-            <h4>{{session['user_name']}}</h4>
+            <h4>{{session['user_email']}}</h4>
         {% else %}
             <div class="container col-lg-3 col-md-6 col-sm-12" centered>
                 <form action="/register" method="POST" name="registration">
                 <div class="form-group">
-                    <label for="fname">First Name</label>
-                    <input class="form-control" id="fname" type="text" name="fname">
-                    <label for="lname">Last Name</label>
-                    <input class="form-control" id="lname" type="text" name="lname">
-                    <label for="email">Email Address</label>
-                    <input class="form-control" id="email" type="text" name="email">
-                    <label for="password">Password</label>
-                    <input class="form-control" id="password" type="password" name="password" placeholder="At least 8 characters">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input class="form-control" id="confirmPassword" type="password" name="confirmPassword">
+                    <label for="fName">First Name</label><br>
+                    <input class="form-control" id="fName" type="text" name="fName"><br>
+                    <label for="lName">Last Name</label><br>
+                    <input class="form-control" id="lName" type="text" name="lName"><br>
+                    <label for="email">Email Address</label><br>
+                    <input class="form-control" id="email" type="text" name="email"><br>
+                    <label for="password">Password</label><br>
+                    <input class="form-control" id="password" type="password" name="password" placeholder="At least 8 characters"><br>
+                    <label for="confirmPassword">Confirm Password</label><br>
+                    <input class="form-control" id="confirmPassword" type="password" name="confirmPassword"><br>
                 </div>
                     <button type="submit" class="btn btn-success" id="submit">Register</button>
             </div>
