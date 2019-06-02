@@ -38,7 +38,7 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config['TESTING'] = True
+#app.config['TESTING'] = True
 
 # Ensure responses aren't cached
 @app.after_request
@@ -59,7 +59,10 @@ db = SQL("sqlite:///bookThatThang.db")
 
 @app.route("/")
 def index():
-
+    if request.method == "POST":
+        return render_template("reservations.html")
+    else:
+        return render_template("reservations.html")
 
     """
 
@@ -112,6 +115,16 @@ def login():
             return render_template("index.html")
 
         """
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
