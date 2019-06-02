@@ -10,6 +10,29 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required
 
+# Database queries
+
+# User
+newUser = "INSERT INTO users ( userID, email, pwdHash, fName, lName, zip, pic ) VALUES ( NULL, :email, :pwdHash, :fName, :lName, :zip, :pic )"
+newTransaction = "INSERT INTO transactions (tranID, userID, eventID, tickets, time) VALUES ( NULL, :userID, :eventID, :tickets, NULL )"
+userLogin = "SELECT * FROM users WHERE email = :email"
+ticketSale = "UPDATE events SET tickets = :tickets WHERE eventID = :eventID"
+allTicketQry = "SELECT eventID, SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID"
+eventTicketQry = "SELECT SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
+
+# Both
+venueQry = "SELECT * FROM venues WHERE venueID = :venueID"
+eventQry = "SELECT * FROM events WHERE eventID = :eventID"
+allEventQry = "SELECT * FROM events"
+allVenueQry = "SELECT * FROM venues"
+
+# Admin
+editEvent = "UPDATE events SET name = :name, tickets = :tickets, type = :type, description = :description, venueID = :venueID WHERE eventID = :eventID"
+newVenue = "INSERT INTO venues (venueID, name, capacity, address1, address2, city, state, zip, adminID) VALUES ( NULL, :name, :capacity, :address1, :address2, :city, :state, :zip, :adminID )"
+newEvent = "INSERT INTO events (eventID, name, tickets, type, start, finish, description, venueID, adminID) VALUES ( NULL, :name, :tickets, :type, :start, :finish, :description, :venueID, :adminID )"
+adminLogin = "SELECT * FROM admin WHERE email = :email"
+
+
 # Configure application
 app = Flask(__name__)
 
@@ -52,7 +75,7 @@ def index():
 
         Display regular homepage
 
-        DB: query all future active events to display on homapage
+        DB: query all future active events to display on homepage
 
         return render_template("index.html")
 
