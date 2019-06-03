@@ -8,12 +8,12 @@ from datetime import datetime
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required
+from helpers import apology, login_required, passwordValid
 
 # Database queries
 
 # User
-newUser = "INSERT INTO users ( userID, email, pwdHash, fName, lName, zip, pic ) VALUES ( NULL, :email, :pwdHash, :fName, :lName, :zip, :pic )"
+newUser = "INSERT INTO users ( userID, email, pwdHash, fName, lName, zip, pic ) VALUES ( NULL, :email, :pwdHash, :fName, :lName, :zipCode, :pic )"
 newTransaction = "INSERT INTO transactions (tranID, userID, eventID, tickets, time) VALUES ( NULL, :userID, :eventID, :tickets, NULL )"
 userLogin = "SELECT * FROM users WHERE email = :email"
 ticketSale = "UPDATE events SET tickets = :tickets WHERE eventID = :eventID"
@@ -128,24 +128,76 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Register user"""
+    if request.method == "POST":
 
-    if request.method == "GET":
+        # Ensure username was submitted
+        if not request.form.get("email"):
+            msg = "You didn't enter an email."
+            return render_template("error.html", msg=msg)
 
-        return render_template("register.html")
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            msg = "You didn't enter a password."
+            return render_template("error.html", msg=msg)
 
-    elif request.method == "POST":
+        # Ensure user confirmed password
+        elif not request.form.get("confirmation"):
+            msg = "You didn't confirm your password."
+            return render_template("error.html", msg=msg)
 
-        """
-        DB query: Register user, Inserting all info into user's row insde DB
+        # Ensure password is valid
+        elif not passwordValid(request.form.get("password")):
+            msg = "Password must contain at least 1 letter, 1 number, and 1 special character"
+            return render_template("error.html", msg=msg)
 
-        if result:
-            return render_template ("login.html", msg="Congrats! You are now registered!")
+        elif request.form.get("password") != request.form.get("confirmation"):
+            msg = "Passwords did not match."
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("fName"):
+            msg = "You didn't enter a first name."
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("lName"):
+            msg = "You didn't enter a last name."
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("zip"):
+            msg = "You didn't enter a zip code."
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("pic"):
+            msg = "You didn't provide a profile picture."
+            return render_template("error.html", msg=msg)
+
+        # Query database for username
+        rows = db.execute("SELECT * FROM users WHERE email = :email",
+                          email=request.form.get("email"))
+
+        # Ensure username doesn't exist, add to database if it doesn't
+        if len(rows) > 0:
+            msg = "That email is already in use."
+            return render_template("error.html", msg=msg)
 
         else:
+            email = request.form.get("email").lower()
+            pwdHash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha1', salt_length=8)
+            fName = request.form.get("fName")
+            lName = request.form.get("lName")
+            zipCode = request.form.get("zipCode")
+            pic = request.form.get("pic")
+            db.execute(newUser, email=email, pwdHash=pwdHash, fName=fName, lName=lName, zipCode=zipCode, pic=pic)
 
-            return apology("TODO")
+            # Redirect user to log in page
+            msg = "Congrats! You are now registered! You may now log in."
+            return render_template("login.html", msg=msg)
 
-        """
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("register.html")
+
+
 
 @app.route("/event/<eventId>", methods=["GET", "POST"])
 def event(eventId):
