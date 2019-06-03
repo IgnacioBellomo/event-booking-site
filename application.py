@@ -131,22 +131,19 @@ def register():
     """Register user"""
     if request.method == "POST":
 
-        # Ensure username was submitted
+        # Form validation
         if not request.form.get("email"):
             msg = "You didn't enter an email."
             return render_template("error.html", msg=msg)
 
-        # Ensure password was submitted
         elif not request.form.get("password"):
             msg = "You didn't enter a password."
             return render_template("error.html", msg=msg)
 
-        # Ensure user confirmed password
         elif not request.form.get("confirmation"):
             msg = "You didn't confirm your password."
             return render_template("error.html", msg=msg)
 
-        # Ensure password is valid
         elif not passwordValid(request.form.get("password")):
             msg = "Password must contain at least 1 letter, 1 number, and 1 special character"
             return render_template("error.html", msg=msg)
@@ -195,7 +192,7 @@ def register():
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("register.html")
+        return render_template("registration.html")
 
 
 
