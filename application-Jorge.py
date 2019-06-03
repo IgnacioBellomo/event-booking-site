@@ -8,12 +8,16 @@ from datetime import datetime
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required
+from helpers import apology, login_required, passwordValid
 
 # Database queries
 
 # User
+<<<<<<< HEAD
 newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, :zip, :pic )"
+=======
+newUser = "INSERT INTO users ( userID, email, pwdHash, fName, lName, zip, pic ) VALUES ( NULL, :email, :pwdHash, :fName, :lName, :zipCode, :pic )"
+>>>>>>> 503f4da1ea728f1c3808b2540b4ce1f1fed2d9ca
 newTransaction = "INSERT INTO transactions (tranID, userID, eventID, tickets, time) VALUES ( NULL, :userID, :eventID, :tickets, NULL )"
 userLogin = "SELECT * FROM users WHERE email = :email"
 ticketSale = "UPDATE events SET tickets = :tickets WHERE eventID = :eventID"
@@ -38,7 +42,7 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config['TESTING'] = True
+#app.config['TESTING'] = True
 
 # Ensure responses aren't cached
 @app.after_request
@@ -59,8 +63,15 @@ db = SQL("sqlite:///bookThatThang.db")
 
 @app.route("/")
 def index():
+<<<<<<< HEAD
 
     """ Show a list of event thumbnail images which point to selected single event page """
+=======
+    if request.method == "POST":
+        return render_template("reservations.html")
+    else:
+        return render_template("reservations.html")
+>>>>>>> 503f4da1ea728f1c3808b2540b4ce1f1fed2d9ca
 
     usr = session.get("userID")
     events = db.execute(allEventQry)
@@ -119,15 +130,39 @@ def logout():
     # Redirect user to login form
     return redirect("/")
 
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Register user"""
+    if request.method == "POST":
 
-    if request.method == "GET":
+        # Form validation
+        if not request.form.get("email"):
+            msg = "You didn't enter an email."
+            return render_template("error.html", msg=msg)
 
+<<<<<<< HEAD
         return render_template("registration.html")
+=======
+        elif not request.form.get("password"):
+            msg = "You didn't enter a password."
+            return render_template("error.html", msg=msg)
+>>>>>>> 503f4da1ea728f1c3808b2540b4ce1f1fed2d9ca
 
-    elif request.method == "POST":
+        elif not request.form.get("confirmation"):
+            msg = "You didn't confirm your password."
+            return render_template("error.html", msg=msg)
 
+<<<<<<< HEAD
         """Register user"""
         email = request.form["email"]
         pwdHash = generate_password_hash(request.form["password"], method='pbkdf2:sha256', salt_length=8)
@@ -138,13 +173,65 @@ def register():
 
         # Register new login info
         result = db.execute (newUser, email=email, fName=fName, pwdHash=pwdHash, lName=lName, zip=zip, pic=pic)
+=======
+        elif not passwordValid(request.form.get("password")):
+            msg = "Password must contain at least 1 letter, 1 number, and 1 special character"
+            return render_template("error.html", msg=msg)
 
-        if result:
-            return render_template ("login.html", msg="Congrats! You are now registered!")
+        elif request.form.get("password") != request.form.get("confirmation"):
+            msg = "Passwords did not match."
+            return render_template("error.html", msg=msg)
 
+        elif not request.form.get("fName"):
+            msg = "You didn't enter a first name."
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("lName"):
+            msg = "You didn't enter a last name."
+            return render_template("error.html", msg=msg)
+>>>>>>> 503f4da1ea728f1c3808b2540b4ce1f1fed2d9ca
+
+        elif not request.form.get("zip"):
+            msg = "You didn't enter a zip code."
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("pic"):
+            msg = "You didn't provide a profile picture."
+            return render_template("error.html", msg=msg)
+
+        # Query database for username
+        rows = db.execute("SELECT * FROM users WHERE email = :email",
+                          email=request.form.get("email"))
+
+        # Ensure username doesn't exist, add to database if it doesn't
+        if len(rows) > 0:
+            msg = "That email is already in use."
+            return render_template("error.html", msg=msg)
+
+<<<<<<< HEAD
     else:
 
         return apology(msg="Looks like the registration failed")
+=======
+        else:
+            email = request.form.get("email").lower()
+            pwdHash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha1', salt_length=8)
+            fName = request.form.get("fName")
+            lName = request.form.get("lName")
+            zipCode = request.form.get("zipCode")
+            pic = request.form.get("pic")
+            db.execute(newUser, email=email, pwdHash=pwdHash, fName=fName, lName=lName, zipCode=zipCode, pic=pic)
+
+            # Redirect user to log in page
+            msg = "Congrats! You are now registered! You may now log in."
+            return render_template("login.html", msg=msg)
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("registration.html")
+
+
+>>>>>>> 503f4da1ea728f1c3808b2540b4ce1f1fed2d9ca
 
 @app.route("/event/<eventId>", methods=["GET", "POST"])
 def event(eventId):

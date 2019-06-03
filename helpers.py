@@ -32,3 +32,19 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
+def passwordValid(password):
+    hasLetter = False
+    hasNumber = False
+    longEnough = False
+
+    if len(password) > 7:
+        longEnough = True
+
+    for i in range(len(password)):
+        letter = password[i]
+        if letter.isalpha():
+            hasLetter = True
+        elif letter.isdigit():
+            hasNumber = True
+    return hasLetter and hasNumber and longEnough
