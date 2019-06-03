@@ -13,7 +13,7 @@ from helpers import apology, login_required, passwordValid
 # Database queries
 
 # User
-newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, :zip, :pic )"
+newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, :zipCode, :pic )"
 newTransaction = "INSERT INTO transactions (tranID, userID, eventID, tickets, time) VALUES ( NULL, :userID, :eventID, :tickets, NULL )"
 userLogin = "SELECT * FROM users WHERE email = :email"
 ticketSale = "UPDATE events SET tickets = :tickets WHERE eventID = :eventID"
@@ -38,7 +38,7 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-#app.config['TESTING'] = True
+app.config['TESTING'] = True
 
 # Ensure responses aren't cached
 @app.after_request
@@ -64,7 +64,7 @@ def index():
 
     if session:
 
-        usr = session['userID']
+        usr = session['user_id']
 
     """ Show a list of event thumbnail images which point to selected single event page """
 
@@ -87,7 +87,7 @@ def login():
             return apology("You must provide your email!", 403)
 
         # Ensure password was submitted
-        elif not request.form["password"]:
+        if not request.form["password"]:
             return apology("You must provide password!", 403)
 
         else:
@@ -102,10 +102,10 @@ def login():
             if len(verifyUsr) != 1 or not check_password_hash(verifyUsr[0]["pwdHash"], password):
 
                 return apology("invalid username and/or password", 403)
-                # Redirect user to home page
 
             else:
 
+                # Redirect user to home page
                 return redirect("/")
 
     if request.method == "GET":
@@ -139,7 +139,7 @@ def register():
             msg = "You didn't enter a password."
             return render_template("error.html", msg=msg)
 
-        elif not request.form.get("confirmation"):
+        elif not request.form.get("confirmPassword"):
             msg = "You didn't confirm your password."
             return render_template("error.html", msg=msg)
 
@@ -147,7 +147,7 @@ def register():
             msg = "Password must contain at least 1 letter, 1 number, and 1 special character"
             return render_template("error.html", msg=msg)
 
-        elif request.form.get("password") != request.form.get("confirmation"):
+        elif request.form.get("password") != request.form.get("confirmPassword"):
             msg = "Passwords did not match."
             return render_template("error.html", msg=msg)
 
@@ -159,6 +159,8 @@ def register():
             msg = "You didn't enter a last name."
             return render_template("error.html", msg=msg)
 
+        """
+
         elif not request.form.get("zip"):
             msg = "You didn't enter a zip code."
             return render_template("error.html", msg=msg)
@@ -166,6 +168,8 @@ def register():
         elif not request.form.get("pic"):
             msg = "You didn't provide a profile picture."
             return render_template("error.html", msg=msg)
+
+        """
 
         # Query database for username
         rows = db.execute(userLogin, email=request.form.get("email"))
@@ -183,6 +187,7 @@ def register():
             lName = request.form.get("lName")
             zipCode = request.form.get("zipCode")
             pic = request.form.get("pic")
+
             db.execute(newUser, email=email, pwdHash=pwdHash, fName=fName, lName=lName, zipCode=zipCode, pic=pic)
 
             # Redirect user to log in page
