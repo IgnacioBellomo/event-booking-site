@@ -13,7 +13,7 @@ from helpers import apology, login_required
 # Database queries
 
 # User
-newUser = "INSERT INTO users ( userID, email, pwdHash, fName, lName, zip, pic ) VALUES ( NULL, :email, :pwdHash, :fName, :lName, :zip, :pic )"
+newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, :zip, :pic )"
 newTransaction = "INSERT INTO transactions (tranID, userID, eventID, tickets, time) VALUES ( NULL, :userID, :eventID, :tickets, NULL )"
 userLogin = "SELECT * FROM users WHERE email = :email"
 ticketSale = "UPDATE events SET tickets = :tickets WHERE eventID = :eventID"
@@ -60,26 +60,12 @@ db = SQL("sqlite:///bookThatThang.db")
 @app.route("/")
 def index():
 
+    """ Show a list of event thumbnail images which point to selected single event page """
 
-    """
+    usr = session.get("userID")
+    events = db.execute(allEventQry)
 
-    >>> Show a list of event thumbnail images which point to selected single event page <<<
-
-    If session.get is not null:
-
-        DB: using sessionID (from session.get) variable
-
-        return render_template("user-index.html")
-
-    else:
-
-        Display regular homepage
-
-        DB: query all future active events to display on homepage
-
-        return render_template("index.html")
-
-     """
+    return render_template("index.html", events=events, usr=usr)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -92,47 +78,73 @@ def login():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        """
-        >>> Query DB to return matching hash stored in 'users' table <<<
+        if not request.form["email"]:
+            return apology("You must provide your email!", 403)
 
-        if successful:
+        # Ensure password was submitted
+        elif not request.form["password"]:
+            return apology("You must provide password!", 403)
 
-            # Redirect user to home page
-            return redirect("/")
+        else:
 
-        Else:
+            """Check password against hash using hash function"""
 
-            return render_template("login.html")
+            email=request.form["email"]
+            password=request.form["password"]
 
-        """
+            verifyUsr = db.execute(userLogin, email=email)
+
+            if len(verifyUsr) != 1 or not check_password_hash(verifyUsr[0]["pwdHash"], password):
+
+                return apology("invalid username and/or password", 403)
+                # Redirect user to home page
+
+            else:
+
+                return redirect("/")
 
     if request.method == "GET":
 
-        """
-            return render_template("index.html")
+            return render_template("login.html")
 
-        """
+
+@app.route("/logout")
+def logout():
+
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
     if request.method == "GET":
 
-        return render_template("register.html")
+        return render_template("registration.html")
 
     elif request.method == "POST":
 
-        """
-        DB query: Register user, Inserting all info into user's row insde DB
+        """Register user"""
+        email = request.form["email"]
+        pwdHash = generate_password_hash(request.form["password"], method='pbkdf2:sha256', salt_length=8)
+        fName = request.form["fName"]
+        lName = request.form["lName"]
+        zip = "33018"
+        pic = "some pic url"
+
+        # Register new login info
+        result = db.execute (newUser, email=email, fName=fName, pwdHash=pwdHash, lName=lName, zip=zip, pic=pic)
 
         if result:
             return render_template ("login.html", msg="Congrats! You are now registered!")
 
-        else:
+    else:
 
-            return apology("TODO")
-
-        """
+        return apology(msg="Looks like the registration failed")
 
 @app.route("/event/<eventId>", methods=["GET", "POST"])
 def event(eventId):

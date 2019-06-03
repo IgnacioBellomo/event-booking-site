@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+    {% for event in events %}
+        <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+            <h2>{{event.name}}</h2>
+            <p>{{event.type}}</p>
+            <p>{{event.description}}</p>
+            <p>{{event.venueID}}</p>
+            <p>{{event.start}}</p>
+            <p>{{event.finish}}</p>
+            <p>Tickets Left:</p>
+            <p>{{event.tickets}}</p>
+            <a href="#">Book</a>
+        </div>
+    {% endfor %}
+
+
+{% endblock %}
+
+{% block script %}{% endblock %}
