@@ -13,7 +13,7 @@ from helpers import apology, login_required, passwordValid
 # Database queries
 
 # User
-newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, :zip, :pic )"
+newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, NULL, NULL )"
 newTransaction = "INSERT INTO transactions (tranID, userID, eventID, tickets, time) VALUES ( NULL, :userID, :eventID, :tickets, NULL )"
 userLogin = "SELECT * FROM users WHERE email = :email"
 ticketSale = "UPDATE events SET tickets = :tickets WHERE eventID = :eventID"
@@ -160,14 +160,6 @@ def register():
             msg = "You didn't enter a last name."
             return render_template("error.html", msg=msg)
 
-        elif not request.form.get("zip"):
-            msg = "You didn't enter a zip code."
-            return render_template("error.html", msg=msg)
-
-        elif not request.form.get("pic"):
-            msg = "You didn't provide a profile picture."
-            return render_template("error.html", msg=msg)
-
         # Query database for username
         rows = db.execute(userLogin, email=request.form.get("email"))
 
@@ -182,9 +174,7 @@ def register():
             pwdHash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha1', salt_length=8)
             fName = request.form.get("fName")
             lName = request.form.get("lName")
-            zipCode = request.form.get("zipCode")
-            pic = request.form.get("pic")
-            db.execute(newUser, email=email, pwdHash=pwdHash, fName=fName, lName=lName, zipCode=zipCode, pic=pic)
+            db.execute(newUser, email=email, pwdHash=pwdHash, fName=fName, lName=lName)
 
             # Redirect user to log in page
             msg = "Congrats! You are now registered! You may now log in."
