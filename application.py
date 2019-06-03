@@ -104,13 +104,13 @@ def login():
                 return apology("invalid username and/or password", 403)
 
             else:
+                # Remember which user has logged in
+                session["user_id"] = verifyUsr[0]["userID"]
 
                 # Redirect user to home page
                 return redirect("/")
-
-    if request.method == "GET":
-
-            return render_template("login.html")
+    else:
+        return render_template("login.html")
 
 
 @app.route("/logout")
@@ -144,7 +144,7 @@ def register():
             return render_template("error.html", msg=msg)
 
         elif not passwordValid(request.form.get("password")):
-            msg = "Password must contain at least 1 letter, 1 number, and 1 special character"
+            msg = "Password must contain at least 1 letter,1 number, and be at least 8 characters long."
             return render_template("error.html", msg=msg)
 
         elif request.form.get("password") != request.form.get("confirmPassword"):
