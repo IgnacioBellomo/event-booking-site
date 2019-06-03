@@ -60,9 +60,14 @@ db = SQL("sqlite:///bookThatThang.db")
 @app.route("/")
 def index():
 
+    usr = None
+
+    if session:
+
+        usr = session['userID']
+
     """ Show a list of event thumbnail images which point to selected single event page """
 
-    usr = session.get("userID")
     events = db.execute(allEventQry)
 
     return render_template("index.html", events=events, usr=usr)
@@ -119,15 +124,6 @@ def logout():
     # Redirect user to login form
     return redirect("/")
 
-@app.route("/logout")
-def logout():
-    """Log user out"""
-
-    # Forget any user_id
-    session.clear()
-
-    # Redirect user to login form
-    return redirect("/")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -139,7 +135,6 @@ def register():
             msg = "You didn't enter an email."
             return render_template("error.html", msg=msg)
 
-        return render_template("registration.html")
         elif not request.form.get("password"):
             msg = "You didn't enter a password."
             return render_template("error.html", msg=msg)
@@ -148,16 +143,6 @@ def register():
             msg = "You didn't confirm your password."
             return render_template("error.html", msg=msg)
 
-        """Register user"""
-        email = request.form["email"]
-        pwdHash = generate_password_hash(request.form["password"], method='pbkdf2:sha256', salt_length=8)
-        fName = request.form["fName"]
-        lName = request.form["lName"]
-        zip = "33018"
-        pic = "some pic url"
-
-        # Register new login info
-        result = db.execute (newUser, email=email, fName=fName, pwdHash=pwdHash, lName=lName, zip=zip, pic=pic)
         elif not passwordValid(request.form.get("password")):
             msg = "Password must contain at least 1 letter, 1 number, and 1 special character"
             return render_template("error.html", msg=msg)
@@ -183,18 +168,15 @@ def register():
             return render_template("error.html", msg=msg)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE email = :email",
-                          email=request.form.get("email"))
+        rows = db.execute(userLogin, email=request.form.get("email"))
 
         # Ensure username doesn't exist, add to database if it doesn't
         if len(rows) > 0:
             msg = "That email is already in use."
             return render_template("error.html", msg=msg)
 
-    else:
-
-        return apology(msg="Looks like the registration failed")
         else:
+
             email = request.form.get("email").lower()
             pwdHash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha1', salt_length=8)
             fName = request.form.get("fName")
