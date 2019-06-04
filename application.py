@@ -17,7 +17,7 @@ newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES (
 newTransaction = "INSERT INTO transactions (tranID, userID, eventID, tickets, time) VALUES ( NULL, :userID, :eventID, :tickets, NULL )"
 userLogin = "SELECT * FROM users WHERE email = :email"
 ticketSale = "UPDATE events SET tickets = :tickets WHERE eventID = :eventID"
-allTicketQry = "SELECT eventID, SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID"
+allTicketQry = "SELECT eventID, SUM(tickets), time FROM transactions GROUP BY eventID HAVING userID = :userID"
 eventTicketQry = "SELECT SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
 
 # Both
@@ -241,9 +241,32 @@ def event(eventID):
 @login_required
 def myReservations():
 
+    i=0
+    reservations = []
+    userTics = db.execute(allTicketQry, userID=session['user_id'])
+    for tic in userTics:
+        event = db.execute(eventQry, eventID=tic["eventID"])
+        venue = db.execute(venueQry, venueID=event["venueID"]) = "SELECT * FROM venues WHERE venueID = :venueID")
+        reservations.append(event)
+        reservations.append(venue)
+        reservations.append(userTics[i])
+        i += 1
+    return render_template("my-reservations.html", reservations=reservations)
         """
+
         Query DB for all reservations belonging to USER and display them in a table with related info
 
         if user clicks on a row or link of an event, a get request will go out with the varible in the URL
 
         """
+@app.route("/book", methods=["POST"])
+@login_required
+def book():
+    if request.method == "POST":
+        if not request.form.get("eventID") or not request.form.get("tickets"):
+            return render_template("error.html")
+        else:
+            db.execute(newTransaction, userID=session["user_id"], eventID=request.form.get["eventID"], tickets=request.form.get["tickets"])
+            db.execute(ticketSale, tic=request.form.get("tickets"), eventID=request.form.get["eventID"] = "UPDATE events SET tickets = tickets - :tic WHERE eventID = :eventID")
+            msg = "Success!"
+            return render_template("confirmation.html", msg=msg)
