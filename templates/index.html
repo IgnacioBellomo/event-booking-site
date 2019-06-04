@@ -5,18 +5,23 @@
 {% block body %}
 
 {% for event in events %}
-    <div class="container col-lg-3 col-md-6 col-sm-12" centered>
-        <h3>{{ event.eventName }}</h3><br>
-        <p>{{ event.description }}</p>
-        <p>{{ event.venueID }}</p>
-        <p>{{ event.eventType }}</p>
-        <p>{{ event.startDate }}</p>
-        <p>{{ event.startTime }}</p>
-        <p>{{ event.endDate }}</p>
-        <p>{{ event.endTime }}</p>
-        <p>Tickets Left:</p>
-        <p>{{ event.tickets }}</p>
-        <a href="{{ '/event/%s'%event.eventID|urlencode }}">Book</a>
+    <div class="card">
+        <div class="card-header">
+            <p>{{ event.startDate }}</p>
+            <p>{{event.eventType}}</p>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">{{ event.eventName }}</h4>
+            <p class="card-text">{{ event.description }}</p>
+        </div>
+        <div class="card-footer text-muted">
+            <p>{{ event.startDate }}</p>
+            <p>{{ event.startTime }}</p>
+            <p>{{ event.venueID }}</p>
+            <p>Tickets Left:</p>
+            <p>{{ event.tickets }}</p>
+            <a href="{{ '/event/%s'%event.eventID|urlencode }}" class="btn btn-primary">Book</a>
+        </div>
     </div>
 {% endfor %}
 
