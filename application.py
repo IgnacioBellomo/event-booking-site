@@ -16,7 +16,7 @@ from helpers import apology, login_required, passwordValid
 newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, :zipCode, :pic )"
 newTransaction = "INSERT INTO transactions (userID, eventID, tickets) VALUES (:userID, :eventID, :tickets)"
 userLogin = "SELECT * FROM users WHERE email = :email"
-ticketSale = "UPDATE events SET tickets = tickets - :tic WHERE eventID = :eventID"
+ticketSale = "UPDATE events SET ticketsLeft = ticketsLeft - :tic WHERE eventID = :eventID"
 allTicketQry = "SELECT eventID, SUM(tickets), time FROM transactions GROUP BY eventID HAVING userID = :userID"
 eventTicketQry = "SELECT SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
 userReservations = "SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID AND transactions.userID = :userID"
@@ -243,14 +243,23 @@ def myReservations():
     return render_template("my-reservations.html", userTickets=userTickets)
         #Query DB for all reservations belonging to USER and display them in a table with related info
         #if user clicks on a row or link of an event, a get request will go out with the varible in the URL
-@app.route("/book", methods=["POST"])
+@app.route("/book/<eventID>", methods=["POST", "GET"])
 @login_required
-def book():
+def book(eventID):
     if request.method == "POST":
-        if not request.form.get("eventID") or not request.form.get("tickets"):
-            return render_template("error.html")
+        if not request.form.get("tickets"):
+            msg = "no tic"
+            return render_template("error.html", msg=msg)
+        if not eventID:
+            msg = "no id"
+            return render_template("error.html", msg=msg)
         else:
-            db.execute(newTransaction, userID=session["user_id"], eventID=request.form.get("eventID"), tickets=request.form.get("tickets"))
-            db.execute(ticketSale, tic=request.form.get("tickets"), eventID=request.form.get("eventID"))
+            db.execute(newTransaction, userID=session["user_id"], eventID=eventID, tickets=request.form.get("tickets"))
+            db.execute(ticketSale, tic=request.form.get("tickets"), eventID=eventID)
             msg = "Success!"
             return render_template("confirmation.html", msg=msg)
+    else:
+        event = db.execute(eventQry, eventID=eventID)
+        # userQuery
+        # venueQuery
+        return render_template("booking.html", event=event[0])
