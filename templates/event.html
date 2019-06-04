@@ -5,6 +5,7 @@
 {% block body %}
 
 <br>
+<<<<<<< HEAD
 <div class="card" centered>
     <div class="card-header">
         <p>{{event.eventType}}</p>
@@ -24,6 +25,33 @@
         <a href="{{ '/event/%s'%event.eventID|urlencode }}" class="btn btn-primary">Book</a>
     </div>
     </div>
+=======
+<div class="container col-lg-3 col-md-6 col-sm-12" centered>
+    <h3>{{event.eventName}}</h3><br>
+    <img src="{{event.eventImg}}" alt="">
+    <p>{{event.description}}</p>
+    <p>{{event.venueID}}</p>
+    <p>{{event.eventType}}</p>
+    <p>{{event.startDate}}</p>
+    <p>{{event.startTime}}</p>
+    <p>{{event.endDate}}</p>
+    <p>{{event.endTime}}</p>
+    <p>Tickets Left:</p>
+    <p>{{event.tickets}}</p>
+    {% if session %}
+    <form action="/book" method="POST" name="bookEvent">
+        <select name="tickets">
+            {% for i in range(event.tickets) %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="eventID" value="{{event.eventID}}"/>
+        <button class="btn btn-primary" type="submit" id="post">Book that thang!</button>
+    </form>
+    {% endif %}
+
+</div>
+>>>>>>> 8cf24bf24613ec768c678f88a671df76eb25b569
 
 
 {%endblock %}

@@ -119,7 +119,6 @@ EMAIL.change ( validateEmail );
  */
 function validatePassword ( )
 {
-{
     if ( !PASSWORD.val() )
     {
         PASSWORD_MSG.html( "Password must have a value!" );
@@ -168,8 +167,24 @@ function isValidPassword ( password )
 }
 
 
-
-
+function validateConfirm () {
+    if (PASSWORD.val() !== CONFIRM.val())
+        {
+        CONFIRM_MSG.html( "Passwords do not match!" );
+        CONFIRM.show();
+        console.log( "Passwords do not match" );
+        validConfirm = false;
+        }
+    else
+        {
+        CONFIRM_MSG.html("");
+        CONFIRM_MSG.hide();
+        validConfirm = true;
+        }
+    validateSubmission ();
+}
+PASSWORD.change ( validatePassword );
+CONFIRM.change ( validatePassword );
 
 
 
@@ -178,8 +193,7 @@ function isValidPassword ( password )
  * button visible. Otherwise hides it.
  */
 function validateSubmission () {
-    if ( validPassword && validConfirm &&
-         validLName && validFName && validEmail )
+    if ( validPassword && validLName && validFName && validEmail )
     {
         SUBMIT.show();
     }
@@ -202,4 +216,4 @@ $(document).ready ( function ()
     validateLName();
     validateEmail();
     validateSubmission();
-} );
+});
