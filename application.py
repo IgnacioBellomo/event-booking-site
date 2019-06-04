@@ -247,6 +247,7 @@ def myReservations():
         #Query DB for all reservations belonging to USER and display them in a table with related info
         #if user clicks on a row or link of an event, a get request will go out with the varible in the URL
 @app.route("/book", methods=["POST"])
+@login_required
 def book():
     if request.method == "POST":
         if not request.form.get("eventID") or not request.form.get("tickets"):
