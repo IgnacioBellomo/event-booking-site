@@ -195,6 +195,12 @@ def register():
     else:
         return render_template("registration.html")
 
+@app.route("/checkReg")
+def checkRegistration():
+    user = request.args['email']
+    rows = db.execute( userLogin, email = email )
+    return  jsonify( exists = len( rows ) > 0 )
+
 
 
 @app.route("/event/<eventID>", methods=["GET", "POST"])
