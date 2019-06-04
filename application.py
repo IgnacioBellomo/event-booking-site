@@ -197,29 +197,33 @@ def register():
 
 
 
-@app.route("/event/<eventId>", methods=["GET", "POST"])
-def event(eventId):
+@app.route("/event/<eventID>", methods=["GET", "POST"])
+def event(eventID):
 
     if request.method == "GET":
 
-        """
+        if not eventID or eventID.isdigit() is False:
 
-        if eventId is not null:
-
-            Query DB to see if user has already gotten tickets
-
-                if result NOT 0: print message on page "You have bought tickets for this event"
-                            and show controls for editing ticket quantity
+            return redirect("/")
 
         else:
 
-            apology("unable to find this event")
+            event = db.execute(eventQry, eventID=eventID)
 
-        """
+            if len(event) != 1:
+
+                return redirect("/")
+
+            else:
+
+                return render_template("event.html", event=event[0])
+
+
+    """
 
     elif request.method == "POST":
 
-        """
+
 
         Save results of ticket quantity change inside DB
 

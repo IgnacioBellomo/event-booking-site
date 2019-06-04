@@ -7,17 +7,16 @@
 {% for event in events %}
     <div class="container col-lg-3 col-md-6 col-sm-12" centered>
         <h3>{{ event.eventName }}</h3><br>
-        <img src="{{ event.eventImg }}" alt="">
         <p>{{ event.description }}</p>
-        <p>{{ event.venue }}</p>
+        <p>{{ event.venueID }}</p>
         <p>{{ event.eventType }}</p>
         <p>{{ event.startDate }}</p>
         <p>{{ event.startTime }}</p>
         <p>{{ event.endDate }}</p>
         <p>{{ event.endTime }}</p>
         <p>Tickets Left:</p>
-        <p>{{ event.tiketsLeft }}</p>
-        <a href="#">Book</a>
+        <p>{{ event.tickets }}</p>
+        <a href="{{ '/event/%s'%event.eventID|urlencode }}">Book</a>
     </div>
 {% endfor %}
 
