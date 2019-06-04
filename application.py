@@ -258,13 +258,8 @@ def myReservations():
         reservations.append(userTics[i])
         i += 1
     return render_template("my-reservations.html", reservations=reservations)
-        """
-
-        Query DB for all reservations belonging to USER and display them in a table with related info
-
-        if user clicks on a row or link of an event, a get request will go out with the varible in the URL
-
-        """
+        #Query DB for all reservations belonging to USER and display them in a table with related info
+        #if user clicks on a row or link of an event, a get request will go out with the varible in the URL
 @app.route("/book", methods=["POST"])
 @login_required
 def book():
@@ -273,6 +268,6 @@ def book():
             return render_template("error.html")
         else:
             db.execute(newTransaction, userID=session["user_id"], eventID=request.form.get["eventID"], tickets=request.form.get["tickets"])
-            db.execute(ticketSale, tic=request.form.get("tickets"), eventID=request.form.get["eventID"] = "UPDATE events SET tickets = tickets - :tic WHERE eventID = :eventID")
+            db.execute(ticketSale, tic=request.form.get("tickets"), eventID=request.form.get["eventID"])
             msg = "Success!"
             return render_template("confirmation.html", msg=msg)
