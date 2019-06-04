@@ -23,7 +23,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 User
               </a>
-              {% if usr %}
+              {% if session %}
               <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="">My Profile</a>
                 <a class="dropdown-item" href="{{ url_for('myReservations') }}">My Reservations</a>

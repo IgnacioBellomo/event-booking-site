@@ -17,7 +17,18 @@
     <p>{{event.endTime}}</p>
     <p>Tickets Left:</p>
     <p>{{event.tickets}}</p>
-    <a href="#">Book</a>
+    {% if session %}
+    <form action="/book" method="POST" name="bookEvent">
+        <select name="tickets">
+            {% for i in range(event.tickets) %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="eventID" value="{{event.eventID}}"/>
+        <button class="btn btn-primary" type="submit" id="post">Book that thang!</button>
+    </form>
+    {% endif %}
+
 </div>
 
 
