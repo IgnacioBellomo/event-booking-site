@@ -19,7 +19,7 @@ userLogin = "SELECT * FROM users WHERE email = :email"
 ticketSale = "UPDATE events SET ticketsLeft = ticketsLeft - :tic WHERE eventID = :eventID"
 allTicketQry = "SELECT eventID, SUM(tickets), time FROM transactions GROUP BY eventID HAVING userID = :userID"
 eventTicketQry = "SELECT SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
-userReservations = "SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID AND transactions.userID = :userID"
+userReservations = "SELECT *, SUM(tickets) AS totalTickets FROM (SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID AND transactions.userID = :userID) GROUP BY eventID"
 
 # Both
 venueQry = "SELECT * FROM venues WHERE venueID = :venueID"
