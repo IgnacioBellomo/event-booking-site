@@ -189,7 +189,7 @@ def register():
 
 @app.route("/checkReg")
 def checkRegistration():
-    user = request.args['email']
+    email = request.args['email']
     rows = db.execute( userLogin, email = email )
     return  jsonify( exists = len( rows ) > 0 )
 

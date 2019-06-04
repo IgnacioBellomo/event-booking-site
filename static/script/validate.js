@@ -3,12 +3,12 @@ const SUBMIT = $( "#submit" );
 
 // Each of the fields and error message divs
 
-const FNAME = $( "#fname" );
-const FNAME_MSG = $( "#fname-msg" );
+const FNAME = $( "#fName" );
+const FNAME_MSG = $( "#fName-msg" );
 var validFName = false;
 
-const LNAME = $( "#lname" );
-const LNAME_MSG = $( "#lname-msg" );
+const LNAME = $( "#lName" );
+const LNAME_MSG = $( "#lName-msg" );
 var validLName = false;
 
 const EMAIL = $( "#email" );
