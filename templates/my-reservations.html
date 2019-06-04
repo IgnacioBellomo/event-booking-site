@@ -24,12 +24,12 @@
     <tr>
       <th scope="row">{{tic["time"]}}</th>
       <th scope="row">{{confirmation}}</th>
-      <td scope="row">{{#.eventName}}</td>
-      <td scope="row">{{#.venuenName}}</td>
-      <td scope="row">{{#.address1}}, {{#.address2}}, {{#.city}}, {{#.state}}, {{#.zip}}</td>
-      <td scope="row">{{#.startDate}}</td>
-      <td scope="row">{{#.startTime}}</td>
-      <td scope="row">{{#.tickets}}</td>
+      <td scope="row">{{tic["eventName"]}}</td>
+      <td scope="row">{{tic["venueName"]}}</td>
+      <td scope="row">{{tic["address1"]}}, {{tic["address2"]}}, {{tic["city"]}}, {{tic["state"]}}, {{tic["zip"]}}</td>
+      <td scope="row">{{tic["startDate"]}}</td>
+      <td scope="row">{{tic["startTime"]}}</td>
+      <td scope="row">{{tic["totalTickets"]}}</td>
       <td scope="row"><a href="#">Change</a></td>
       <td scope="row"><a href="#">Cancel</a></td>
     </tr>
