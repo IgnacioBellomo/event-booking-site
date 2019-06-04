@@ -252,7 +252,7 @@ def myReservations():
     userTics = db.execute(allTicketQry, userID=session['user_id'])
     for tic in userTics:
         event = db.execute(eventQry, eventID=tic["eventID"])
-        venue = db.execute(venueQry, venueID=event["venueID"]) = "SELECT * FROM venues WHERE venueID = :venueID")
+        venue = db.execute(venueQry, venueID=event["venueID"])
         reservations.append(event)
         reservations.append(venue)
         reservations.append(userTics[i])
