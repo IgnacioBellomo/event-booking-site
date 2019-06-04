@@ -191,9 +191,6 @@ def checkRegistration():
 @app.route("/event/<eventID>", methods=["GET", "POST"])
 def event(eventID):
     if request.method == "GET":
-        if not session:
-            msg = "no sesh"
-            return render_template("error.html", msg=msg)
         if not eventID or eventID.isdigit() is False:
             return redirect("/")
 

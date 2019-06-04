@@ -20,8 +20,16 @@
         <p>{{event.endDate}}</p>
         <p>{{event.endTime}}</p>
         <p>Tickets Left:</p>
-        <p>{{ event.tickets }}</p>
-        <a href="{{ '/event/%s'%event.eventID|urlencode }}" class="btn btn-primary">Book</a>
+        <p>{{ event.ticketsLeft }}</p>
+        <form action="/book" method="post">
+            <input type="hidden" name="eventID" value="{{event.eventID}}"/>
+            <select>
+                {% for i in range(event.ticketsLeft) %}
+                <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+            </select>
+        <button class="btn btn-primary" type="submit" id="post">Book</button>
+    </form>
     </div>
     </div>
 
