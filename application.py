@@ -159,8 +159,6 @@ def register():
             msg = "You didn't enter a last name."
             return render_template("error.html", msg=msg)
 
-        """
-
         elif not request.form.get("zip"):
             msg = "You didn't enter a zip code."
             return render_template("error.html", msg=msg)
@@ -169,7 +167,6 @@ def register():
             msg = "You didn't provide a profile picture."
             return render_template("error.html", msg=msg)
 
-        """
 
         # Query database for username
         rows = db.execute(userLogin, email=request.form.get("email"))
