@@ -20,9 +20,9 @@
     </tr>
   </thead>
   <tbody>
-    {% for # in # %}
+    {% for tic in userTickets %}
     <tr>
-      <th scope="row">{{#.time}}</th>
+      <th scope="row">{{tic["time"]}}</th>
       <th scope="row">{{#.confirmation}}</th>
       <td scope="row">{{#.eventName}}</td>
       <td scope="row">{{#.venuenName}}</td>
