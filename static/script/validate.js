@@ -149,7 +149,6 @@ function isValidPassword ( password )
 {
     let hasLetter = false;
     let hasNumber = false;
-    let hasSpecial = false;
 
     for ( let i = 0; i < password.length; i++ )
     {
@@ -162,12 +161,6 @@ function isValidPassword ( password )
         else if ( !isNaN( letter ) )
         {
             hasNumber = true;
-        }
-        else if ( letter == "*" || letter == "!" ||
-                  letter == "$" || letter == "&" ||
-                  letter == "@" || letter == "#" )
-        {
-            hasSpecial = true;
         }
     }
 
