@@ -18,8 +18,9 @@ newTransaction = "INSERT INTO transactions (userID, eventID, tickets) VALUES (:u
 userLogin = "SELECT * FROM users WHERE email = :email"
 userQry = "SELECT * FROM users WHERE userID = :userID"
 ticketSale = "UPDATE events SET ticketsLeft = ticketsLeft - :tic WHERE eventID = :eventID"
+ticketReturn = "UPDATE events SET ticketsLeft = ticketsLeft + :tickets WHERE eventID = :eventID"
 allTicketQry = "SELECT eventID, SUM(tickets), time FROM transactions GROUP BY eventID HAVING userID = :userID"
-eventTicketQry = "SELECT SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
+eventTicketQry = "SELECT SUM(tickets) AS totalTickets FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
 userReservations = "SELECT *, SUM(tickets) AS totalTickets FROM (SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID AND transactions.userID = :userID) GROUP BY eventID"
 
 # Both
@@ -232,12 +233,16 @@ def event(eventID):
 @app.route("/my-reservations", methods=["GET"])
 @login_required
 def myReservations():
-    userTickets = db.execute(userReservations, userID=session["user_id"])
-    for tic in userTickets:
+    userTicket = db.execute(userReservations, userID=session["user_id"])
+    remover = []
+    for tic in userTicket:
+        if tic["totalTickets"] == 0:
+            remover.append(tic)
         confirmation = "T"
         tran = int(tic["tranID"]) + 12340
         confirmation = confirmation + str(tran)
         tic["confirmation"] = confirmation
+    userTickets = [x for x in userTicket if x not in remover]
     return render_template("my-reservations.html", userTickets=userTickets)
         #Query DB for all reservations belonging to USER and display them in a table with related info
         #if user clicks on a row or link of an event, a get request will go out with the varible in the URL
@@ -269,7 +274,41 @@ def book(eventID):
         usr = usr[0]
         return render_template("booking.html", event=event, venue=venue, usr=usr)
 
-@app.route
+#@app.route("/change/<eventID>", methods=["POST", "GET"])
+#@login_required
+#def change(eventID):
+    #if request.method == "POST":
+            #return render_template("error.html")
+
+
+@app.route("/return/<eventID>", methods=["POST", "GET"])
+@login_required
+def cancel(eventID):
+    if request.method == "POST":
+        if not eventID:
+            msg = "no id"
+            return render_template("error.html")
+        if not request.form.get("tickets"):
+            msg = "no tic"
+            return render_template("error.html")
+        tickets = db.execute(eventTicketQry, eventID=eventID, userID=session["user_id"])
+        db.execute(ticketReturn, tickets=request.form.get("tickets"), eventID=eventID)
+        db.execute(newTransaction, userID=session["user_id"], eventID=eventID, tickets=(int(request.form.get("tickets"))) * -1)
+        msg = "Tickets returned."
+        return render_template("confirmation.html", msg=msg)
+    else:
+        event = db.execute(eventQry, eventID=eventID)
+        event = event[0]
+        venue = db.execute(venueQry, venueID=event["venueID"])
+        venue = venue[0]
+        usr = db.execute(userQry, userID=session["user_id"])
+        usr = usr[0]
+        tickets = db.execute(eventTicketQry, eventID=eventID, userID=session["user_id"])
+        tickets = tickets[0]
+        return render_template("modifyMyReservation.html", event=event, venue=venue, usr=usr, tickets=tickets)
+
+
+
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_Login():
 

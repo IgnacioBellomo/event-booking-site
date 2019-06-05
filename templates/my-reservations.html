@@ -29,8 +29,8 @@
       <td scope="row">{{tic["address1"]}}, {{tic["address2"]}}, {{tic["city"]}}, {{tic["state"]}}, {{tic["zip"]}}</td>
       <td scope="row">{{tic["startDate"]}}</td>
       <td scope="row">{{tic["startTime"]}}</td>
-      <td scope="row">{{tic["tickets"]}}</td>
-      <td scope="row"><a href="#">Change</a></td>
+      <td scope="row">{{tic["totalTickets"]}}</td>
+      <td scope="row"><a href="{{ '/return/%s'%tic['eventID']|urlencode }}">Return</a></td>
       <td scope="row"><a href="#">Cancel</a></td>
     </tr>
     {% endfor %}

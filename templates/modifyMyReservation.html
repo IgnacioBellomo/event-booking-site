@@ -1,29 +1,34 @@
 {% extends "base.html" %}
 
-{% block title %}Modify - {{#.confirmation}}{% endblock %}
+{% block title %}Return - {{event.eventName}}{% endblock %}
 
 {% block body %}
 
 <div class="container col-lg-3 col-md-6 col-sm-12" centered>
-    <form action="/#" method="POST" name="registration">
-    <div class="form-group">
-        <h3>{{#.eventName}}</h3><br>
-        <img src="{{#.eventImg}}" alt="">
-        <p>{{#.description}}</p>
-        <p>{{#.venue}}</p>
-        <p>{{#.eventType}}</p>
-        <p>{{#.startDate}}</p>
-        <p>{{#.startTime}}</p>
-        <p>{{#.endDate}}</p>
-        <p>{{#.endTime}}</p>
-        <br>
-        <p>{{#.fName}} {{#.fName}}</p>
-        <p>{{#.email}}</p>
+    <form action="{{ '/return/%s'%event.eventID|urlencode }}" method="post" name="cancel">
+        <div class="form-group">
+            <h3>{{event.eventName}}</h3><br>
+            <img src="{{eventImg}}" alt="">
+            <p>{{event.description}}</p>
+            <p>{{venue.name}}</p>
+            <p>{{event.type}}</p>
+            <p>{{event.startDate}}</p>
+            <p>{{event.startTime}}</p>
+            <p>{{event.endDate}}</p>
+            <p>{{event.endTime}}</p>
+            <p>{{tickets.totalTickets}}</p>
+            <br>
+            <p>{{usr.fName}} {{usr.lName}}</p>
+            <p>{{usr.email}}</p>
 
-        <label for="numberTickets">Number of tickets</label><br>
-        <input class="form-control" id="numberTickets" type="text" name="numberTickets" value='{{#.numberTickets}}'><br>
-    </div>
-    <button type="submit" class="btn btn-success" id="submit">Book</button>
+            <label for="tickets">How many tickets do you want to return?</label><br>
+            <select name="tickets">
+                {% for i in range(tickets.totalTickets) %}
+                    <option value="{{i+1}}">{{i + 1}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    <button type="submit" class="btn btn-danger" id="submit">Return tickets</button>
 </div>
 
 
