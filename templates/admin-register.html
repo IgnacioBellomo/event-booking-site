@@ -1,0 +1,43 @@
+{% extends "baseadmin.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block body %}
+    <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+        <br><h6>{{msg}}</h6><br>
+    </div>
+        {% if session %}
+            <p>You are already registered as the following user:</p>
+            <h4>{{session['user_email']}}</h4>
+        {% else %}
+            <div class="container col-lg-3 col-md-6 col-sm-12" centered>
+                <form action="/admin-register" method="POST" name="registration">
+                <div class="form-group">
+                    <div class="form-box">
+                        <label for="email">Email Address</label><br>
+                        <input class="form-control" id="email" type="text" name="email"><br>
+                        <div id="email-msg" class=""></div>
+                    </div>
+                    <div class="form-box">
+                        <label for="password">Password</label><br>
+                        <input class="form-control" id="password" type="password" name="password" placeholder="Must have 1 number, 1 letter and 1 special character"><br>
+                        <div id="password-msg" class=""></div>
+                    </div>
+                    <div class="form-box">
+                        <label for="confirmPassword">Confirm Password</label><br>
+                        <input class="form-control" id="confirmPassword" type="password" name="confirmPassword"><br>
+                        <div id="confirm-password-msg" class=""></div>
+                    </div>
+                </div>
+                    <div class="form-box">
+                        <button type="submit" class="btn btn-success" id="submit">Register</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+
+{% endblock %}
+
+{% block script %}{% endblock %}

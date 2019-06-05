@@ -31,6 +31,7 @@ editEvent = "UPDATE events SET name = :name, tickets = :tickets, type = :type, d
 newVenue = "INSERT INTO venues (venueID, name, capacity, address1, address2, city, state, zip, adminID) VALUES ( NULL, :name, :capacity, :address1, :address2, :city, :state, :zip, :adminID )"
 newEvent = "INSERT INTO events (eventID, name, tickets, type, start, finish, description, venueID, adminID) VALUES ( NULL, :name, :tickets, :type, :start, :finish, :description, :venueID, :adminID )"
 adminLogin = "SELECT * FROM admin WHERE email = :email"
+newAdmin = "INSERT INTO admin ( email, pwdHash ) VALUES ( :email, :pwdHash )"
 
 
 # Configure application
@@ -60,8 +61,6 @@ db = SQL("sqlite:///bookThatThang.db")
 @app.route("/")
 def index():
 
-    usr = None
-
     if session:
 
         usr = session['user_id']
@@ -70,7 +69,7 @@ def index():
 
     events = db.execute(allEventQry)
 
-    return render_template("index.html", events=events, usr=usr)
+    return render_template("index.html", events=events )
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -110,6 +109,7 @@ def login():
                 # Redirect user to home page
                 return redirect("/")
     else:
+
         return render_template("login.html")
 
 
@@ -197,7 +197,7 @@ def register():
 
 @app.route("/checkReg")
 def checkRegistration():
-    user = request.args['email']
+    email = request.args['email']
     rows = db.execute( userLogin, email = email )
     return  jsonify( exists = len( rows ) > 0 )
 
@@ -271,3 +271,111 @@ def book():
             db.execute(ticketSale, tic=request.form.get("tickets"), eventID=request.form.get["eventID"])
             msg = "Success!"
             return render_template("confirmation.html", msg=msg)
+
+
+@app.route("/admin-login", methods=["GET", "POST"])
+def admin_Login():
+
+    """Login page for admin"""
+
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        if not request.form["email"]:
+            return apology("You must provide your email!", 403)
+
+        # Ensure password was submitted
+        if not request.form["password"]:
+            return apology("You must provide password!", 403)
+
+        else:
+
+            """Check password against hash using hash function"""
+
+            email=request.form["email"]
+            password=request.form["password"]
+
+            verifyAdmin = db.execute(adminLogin, email=email)
+
+            if len(verifyAdmin) != 1 or not check_password_hash(verifyAdmin[0]["pwdHash"], password):
+
+                return apology("invalid username and/or password", 403)
+
+            else:
+                # Remember which user has logged in
+                session["user_id"] = verifyAdmin[0]["adminID"]
+
+                # Redirect user to admin home page
+                return redirect("/admin")
+    else:
+
+        return render_template("login.html")
+
+
+@app.route("/admin", methods=["GET"])
+@login_required
+def admin():
+
+        events = db.execute(allEventQry)
+
+        return render_template("admin-index.html", events=events)
+
+
+@app.route("/admin-register", methods=["GET", "POST"])
+def adminRegister():
+
+    if request.method == "POST":
+
+        # Form validation
+        if not request.form.get("email"):
+            msg = "You didn't enter an email."
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("password"):
+            msg = "You didn't enter a password."
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("confirmPassword"):
+            msg = "You didn't confirm your password."
+            return render_template("error.html", msg=msg)
+
+        elif not passwordValid(request.form.get("password")):
+            msg = "Password must contain at least 1 letter,1 number, and be at least 8 characters long."
+            return render_template("error.html", msg=msg)
+
+        elif request.form.get("password") != request.form.get("confirmPassword"):
+            msg = "Passwords did not match."
+            return render_template("error.html", msg=msg)
+
+        # Query database for username
+        rows = db.execute(adminLogin, email=request.form.get("email"))
+
+        # Ensure username doesn't exist, add to database if it doesn't
+        if len(rows) > 0:
+            msg = "That email is already in use."
+            return render_template("error.html", msg=msg)
+
+        else:
+
+            email = request.form.get("email").lower()
+            pwdHash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha1', salt_length=8)
+
+            regAdmin = db.execute(newAdmin, email=email, pwdHash=pwdHash)
+
+            if regAdmin:
+                # Redirect user to log in page
+                msg = "Congrats! You are now registered as an admin! You may now log in."
+
+                return render_template("admin-login.html")
+
+            else:
+
+                return render_template("admin-register.html")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+
+        return render_template("admin-register.html")
