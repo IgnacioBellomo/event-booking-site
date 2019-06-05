@@ -7,17 +7,17 @@
 <div class="container col-lg-3 col-md-6 col-sm-12" centered>
     <form action="{{ '/book/%s'%event.eventID|urlencode }}" method="post" name="registration">
         <div class="form-group">
-            <h3>{{event.venueID}}</h3><br>
+            <h3>{{event.eventName}}</h3><br>
             <p>{{event.description}}</p>
-            <p>{{event.venueID}}</p>
+            <p>{{venue.venueName}}</p>
             <p>{{event.type}}</p>
             <p>{{event.startDate}}</p>
             <p>{{event.startTime}}</p>
             <p>{{event.endDate}}</p>
             <p>{{event.endTime}}</p>
             <br>
-            <p>{{fName}} {{lName}}</p>
-            <p>{{email}}</p>
+            <p>{{usr.fName}} {{usr.lName}}</p>
+            <p>{{usr.email}}</p>
         </div>
         <div class="form-box">
             <label for="numberTickets">Number of tickets</label><br>

@@ -16,6 +16,7 @@ from helpers import apology, login_required, passwordValid
 newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, :zipCode, :pic )"
 newTransaction = "INSERT INTO transactions (userID, eventID, tickets) VALUES (:userID, :eventID, :tickets)"
 userLogin = "SELECT * FROM users WHERE email = :email"
+userQry = "SELECT * FROM users WHERE userID = :userID"
 ticketSale = "UPDATE events SET ticketsLeft = ticketsLeft - :tic WHERE eventID = :eventID"
 allTicketQry = "SELECT eventID, SUM(tickets), time FROM transactions GROUP BY eventID HAVING userID = :userID"
 eventTicketQry = "SELECT SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
@@ -240,6 +241,7 @@ def myReservations():
     return render_template("my-reservations.html", userTickets=userTickets)
         #Query DB for all reservations belonging to USER and display them in a table with related info
         #if user clicks on a row or link of an event, a get request will go out with the varible in the URL
+
 @app.route("/book/<eventID>", methods=["POST", "GET"])
 @login_required
 def book(eventID):
@@ -255,8 +257,19 @@ def book(eventID):
             db.execute(ticketSale, tic=request.form.get("tickets"), eventID=eventID)
             msg = "Success!"
             return render_template("confirmation.html", msg=msg)
+    else:
+        if not eventID:
+            msg = "no id"
+            return render_template("error.html", msg=msg)
+        event = db.execute(eventQry, eventID=eventID)
+        event = event[0]
+        venue = db.execute(venueQry, venueID=event["venueID"])
+        venue = venue[0]
+        usr = db.execute(userQry, userID=session["user_id"])
+        usr = usr[0]
+        return render_template("booking.html", event=event, venue=venue, usr=usr)
 
-
+@app.route
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_Login():
 
