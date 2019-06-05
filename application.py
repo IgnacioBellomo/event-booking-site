@@ -14,11 +14,12 @@ from helpers import apology, login_required, passwordValid
 
 # User
 newUser = "INSERT INTO users ( email, pwdHash, fName, lName, zip, pic ) VALUES ( :email, :pwdHash, :fName, :lName, :zipCode, :pic )"
-newTransaction = "INSERT INTO transactions (tranID, userID, eventID, tickets, time) VALUES ( NULL, :userID, :eventID, :tickets, NULL )"
+newTransaction = "INSERT INTO transactions (userID, eventID, tickets) VALUES (:userID, :eventID, :tickets)"
 userLogin = "SELECT * FROM users WHERE email = :email"
-ticketSale = "UPDATE events SET tickets = :tickets WHERE eventID = :eventID"
+ticketSale = "UPDATE events SET ticketsLeft = ticketsLeft - :tic WHERE eventID = :eventID"
 allTicketQry = "SELECT eventID, SUM(tickets), time FROM transactions GROUP BY eventID HAVING userID = :userID"
 eventTicketQry = "SELECT SUM(tickets) FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
+userReservations = "SELECT *, SUM(tickets) AS totalTickets FROM (SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID AND transactions.userID = :userID) GROUP BY eventID"
 
 # Both
 venueQry = "SELECT * FROM venues WHERE venueID = :venueID"
@@ -39,7 +40,6 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config['TESTING'] = True
 
 # Ensure responses aren't cached
 @app.after_request
@@ -61,15 +61,9 @@ db = SQL("sqlite:///bookThatThang.db")
 @app.route("/")
 def index():
 
-    if session:
-
-        usr = session['user_id']
-
     """ Show a list of event thumbnail images which point to selected single event page """
-
     events = db.execute(allEventQry)
-
-    return render_template("index.html", events=events )
+    return render_template("index.html", events=events)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -83,11 +77,13 @@ def login():
     if request.method == "POST":
 
         if not request.form["email"]:
-            return apology("You must provide your email!", 403)
+            msg = "You must provide your email!"
+            return render_template("error.html", msg=msg)
 
         # Ensure password was submitted
-        if not request.form["password"]:
-            return apology("You must provide password!", 403)
+        elif not request.form["password"]:
+            msg = "You must provide password!"
+            return render_template("error.html", msg=msg)
 
         else:
 
@@ -99,8 +95,8 @@ def login():
             verifyUsr = db.execute(userLogin, email=email)
 
             if len(verifyUsr) != 1 or not check_password_hash(verifyUsr[0]["pwdHash"], password):
-
-                return apology("invalid username and/or password", 403)
+                msg = "invalid username and/or password"
+                return render_template("error.html", msg=msg)
 
             else:
                 # Remember which user has logged in
@@ -159,14 +155,6 @@ def register():
             msg = "You didn't enter a last name."
             return render_template("error.html", msg=msg)
 
-        elif not request.form.get("zip"):
-            msg = "You didn't enter a zip code."
-            return render_template("error.html", msg=msg)
-
-        elif not request.form.get("pic"):
-            msg = "You didn't provide a profile picture."
-            return render_template("error.html", msg=msg)
-
 
         # Query database for username
         rows = db.execute(userLogin, email=request.form.get("email"))
@@ -205,11 +193,8 @@ def checkRegistration():
 
 @app.route("/event/<eventID>", methods=["GET", "POST"])
 def event(eventID):
-
     if request.method == "GET":
-
         if not eventID or eventID.isdigit() is False:
-
             return redirect("/")
 
         else:
@@ -246,29 +231,28 @@ def event(eventID):
 @app.route("/my-reservations", methods=["GET"])
 @login_required
 def myReservations():
-
-    i=0
-    reservations = []
-    userTics = db.execute(allTicketQry, userID=session['user_id'])
-    for tic in userTics:
-        event = db.execute(eventQry, eventID=tic["eventID"])
-        venue = db.execute(venueQry, venueID=event["venueID"])
-        reservations.append(event)
-        reservations.append(venue)
-        reservations.append(userTics[i])
-        i += 1
-    return render_template("my-reservations.html", reservations=reservations)
+    userTickets = db.execute(userReservations, userID=session["user_id"])
+    for tic in userTickets:
+        confirmation = "T"
+        tran = int(tic["tranID"]) + 12340
+        confirmation = confirmation + str(tran)
+        tic["confirmation"] = confirmation
+    return render_template("my-reservations.html", userTickets=userTickets)
         #Query DB for all reservations belonging to USER and display them in a table with related info
         #if user clicks on a row or link of an event, a get request will go out with the varible in the URL
-@app.route("/book", methods=["POST"])
+@app.route("/book/<eventID>", methods=["POST", "GET"])
 @login_required
-def book():
+def book(eventID):
     if request.method == "POST":
-        if not request.form.get("eventID") or not request.form.get("tickets"):
-            return render_template("error.html")
+        if not request.form.get("tickets"):
+            msg = "no tic"
+            return render_template("error.html", msg=msg)
+        if not eventID:
+            msg = "no id"
+            return render_template("error.html", msg=msg)
         else:
-            db.execute(newTransaction, userID=session["user_id"], eventID=request.form.get["eventID"], tickets=request.form.get["tickets"])
-            db.execute(ticketSale, tic=request.form.get("tickets"), eventID=request.form.get["eventID"])
+            db.execute(newTransaction, userID=session["user_id"], eventID=eventID, tickets=request.form.get("tickets"))
+            db.execute(ticketSale, tic=request.form.get("tickets"), eventID=eventID)
             msg = "Success!"
             return render_template("confirmation.html", msg=msg)
 

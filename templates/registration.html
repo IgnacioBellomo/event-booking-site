@@ -18,12 +18,12 @@ Register
                     <div class="form-box">
                         <label for="fName">First Name</label><br>
                         <input class="form-control" id="fName" type="text" name="fName"><br>
-                        <div id="fname-msg" class="alert alert-danger py-0"></div>
+                        <div id="fName-msg" class="alert alert-danger py-0"></div>
                     </div>
                     <div class="form-box">
                         <label for="lName">Last Name</label><br>
                         <input class="form-control" id="lName" type="text" name="lName"><br>
-                        <div id="lname-msg" class="alert alert-danger py-0"></div>
+                        <div id="lName-msg" class="alert alert-danger py-0"></div>
                     </div>
                     <div class="form-box">
                         <label for="email">Email Address</label><br>
@@ -32,7 +32,7 @@ Register
                     </div>
                     <div class="form-box">
                         <label for="password">Password</label><br>
-                        <input class="form-control" id="password" type="password" name="password" placeholder="Must have 1 number, 1 letter and 1 special character"><br>
+                        <input class="form-control" id="password" type="password" name="password" placeholder="Must have 1 number, 1 letter"><br>
                         <div id="password-msg" class="alert alert-danger py-0"></div>
                     </div>
                     <div class="form-box">
@@ -50,4 +50,4 @@ Register
 
 {% endblock %}
 
-{% block script %}<script src="{{ url_for('static',filename='Script/validate.js') }}" ></script>{% endblock %}
+{% block script %}<script src="{{ url_for('static',filename='script/validate.js') }}" ></script>{% endblock %}

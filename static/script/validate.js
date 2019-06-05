@@ -3,12 +3,12 @@ const SUBMIT = $( "#submit" );
 
 // Each of the fields and error message divs
 
-const FNAME = $( "#fname" );
-const FNAME_MSG = $( "#fname-msg" );
+const FNAME = $( "#fName" );
+const FNAME_MSG = $( "#fName-msg" );
 var validFName = false;
 
-const LNAME = $( "#lname" );
-const LNAME_MSG = $( "#lname-msg" );
+const LNAME = $( "#lName" );
+const LNAME_MSG = $( "#lName-msg" );
 var validLName = false;
 
 const EMAIL = $( "#email" );
@@ -119,7 +119,6 @@ EMAIL.change ( validateEmail );
  */
 function validatePassword ( )
 {
-{
     if ( !PASSWORD.val() )
     {
         PASSWORD_MSG.html( "Password must have a value!" );
@@ -149,7 +148,6 @@ function isValidPassword ( password )
 {
     let hasLetter = false;
     let hasNumber = false;
-    let hasSpecial = false;
 
     for ( let i = 0; i < password.length; i++ )
     {
@@ -163,20 +161,30 @@ function isValidPassword ( password )
         {
             hasNumber = true;
         }
-        else if ( letter == "*" || letter == "!" ||
-                  letter == "$" || letter == "&" ||
-                  letter == "@" || letter == "#" )
-        {
-            hasSpecial = true;
-        }
     }
 
     return hasLetter && hasNumber && hasSpecial;
 }
 
 
-
-
+function validateConfirm () {
+    if (PASSWORD.val() !== CONFIRM.val())
+        {
+        CONFIRM_MSG.html( "Passwords do not match!" );
+        CONFIRM.show();
+        console.log( "Passwords do not match" );
+        validConfirm = false;
+        }
+    else
+        {
+        CONFIRM_MSG.html("");
+        CONFIRM_MSG.hide();
+        validConfirm = true;
+        }
+    validateSubmission ();
+}
+PASSWORD.change ( validatePassword );
+CONFIRM.change ( validatePassword );
 
 
 
@@ -185,8 +193,7 @@ function isValidPassword ( password )
  * button visible. Otherwise hides it.
  */
 function validateSubmission () {
-    if ( validPassword && validConfirm &&
-         validLName && validFName && validEmail )
+    if ( validPassword && validLName && validFName && validEmail )
     {
         SUBMIT.show();
     }
@@ -209,4 +216,4 @@ $(document).ready ( function ()
     validateLName();
     validateEmail();
     validateSubmission();
-} );
+});
