@@ -6,7 +6,7 @@
 
 {% for event in events %}
     <div class="card-deck-wrapper">
-        <div class="card" class="card card-inverse card-success text-center col-xs-12 col-sm-12 col-md-4 col-lg-6 col-xl-6" style="width: 18rem;>
+        <div class="card" class="card card-inverse card-success text-center col-xs-12 col-sm-12 col-md-4 col-lg-6 col-xl-6" style="width: 50rem">
             <div class="card-deck">
                 <div class="card-header">
                     <p>{{ event.startDate }}</p>
@@ -14,7 +14,6 @@
                 </div>
                 <div class="card-body">
                     <h4 class="card-title">{{ event.eventName }}</h4>
-                    <p class="card-text">{{ event.description }}</p>
                 </div>
                 <div class="card-footer text-muted">
                     <p>{{ event.startDate }}</p>
