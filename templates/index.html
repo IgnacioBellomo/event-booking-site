@@ -3,11 +3,10 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-
+<div class="card-columns text-center">
 {% for event in events %}
-    <div class="card-deck-wrapper">
-        <div class="card" class="card card-inverse card-success text-center col-xs-12 col-sm-12 col-md-4 col-lg-6 col-xl-6" style="width: 50rem">
-            <div class="card-deck">
+        <div class="card">
+            <div>
                 <div class="card-header">
                     <p>{{ event.startDate }}</p>
                     <p>{{event.eventType}}</p>
@@ -25,8 +24,9 @@
                 </div>
             </div>
         </div>
-    </div>
-{% endfor %}
+    {% endfor %}
+</div>
+
 
 {%endblock %}
 
