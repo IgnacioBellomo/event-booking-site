@@ -228,18 +228,12 @@ def event(eventID):
 @app.route("/my-reservations", methods=["GET"])
 @login_required
 def myReservations():
-
-    #i=0
-    #reservations = []
     userTickets = db.execute(userReservations, userID=session["user_id"])
-    #db.execute(allTicketQry, userID=session['user_id'])
-    #for tic in userTics:
-     #   event = db.execute(eventQry, eventID=tic["eventID"])
-      #  venue = db.execute(venueQry, venueID=event["venueID"])
-       # reservations.append(event)
-        #reservations.append(venue)
-        #reservations.append(userTics[i])
-        #i += 1
+    for tic in userTickets:
+        confirmation = "T"
+        tran = int(tic["tranID"]) + 12340
+        confirmation = confirmation + str(tran)
+        tic["confirmation"] = confirmation
     return render_template("my-reservations.html", userTickets=userTickets)
         #Query DB for all reservations belonging to USER and display them in a table with related info
         #if user clicks on a row or link of an event, a get request will go out with the varible in the URL
