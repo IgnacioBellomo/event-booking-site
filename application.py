@@ -410,12 +410,9 @@ def adminRegister():
             pwdHash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha1', salt_length=8)
 
             db.execute(newAdmin, email=email, pwdHash=pwdHash)
-                msg = "Congrats! You are now registered as an admin! You may now log in."
-                return render_template("admin-login.html")
+            msg = "Congrats! You are now registered as an admin! You may now log in."
+            return render_template("admin-login.html")
 
-            else:
-
-                return render_template("admin-register.html")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
