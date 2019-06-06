@@ -65,6 +65,11 @@ def index():
 
     """ Show a list of event thumbnail images which point to selected single event page """
     events = db.execute(allEventQry)
+    venues = db.execute(allVenueQry)
+    for event in events:
+        for venue in venues:
+            if venue["venueID"] == event["venueID"]:
+                event["venueName"] = venue["venueName"]
     return render_template("index.html", events=events)
 
 
@@ -274,12 +279,6 @@ def book(eventID):
         usr = usr[0]
         return render_template("booking.html", event=event, venue=venue, usr=usr)
 
-#@app.route("/change/<eventID>", methods=["POST", "GET"])
-#@login_required
-#def change(eventID):
-    #if request.method == "POST":
-            #return render_template("error.html")
-
 
 @app.route("/return/<eventID>", methods=["POST", "GET"])
 @login_required
@@ -308,7 +307,6 @@ def cancel(eventID):
         return render_template("modifyMyReservation.html", event=event, venue=venue, usr=usr, tickets=tickets)
 
 
-
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_Login():
 
@@ -321,13 +319,17 @@ def admin_Login():
     if request.method == "POST":
 
         if not request.form["email"]:
-            return apology("You must provide your email!", 403)
+            msg = "You didn't enter an email."
+            return render_template("error.html", msg=msg)
 
         # Ensure password was submitted
         if not request.form["password"]:
-            return apology("You must provide password!", 403)
+            msg = "You must provide password!"
+            return render_template("error.html", msg=msg)
 
         else:
+            msg = "You must provide password!"
+            return render_template("error.html", msg=msg)
 
             """Check password against hash using hash function"""
 
@@ -337,18 +339,19 @@ def admin_Login():
             verifyAdmin = db.execute(adminLogin, email=email)
 
             if len(verifyAdmin) != 1 or not check_password_hash(verifyAdmin[0]["pwdHash"], password):
-
-                return apology("invalid username and/or password", 403)
+                msg = "invalid username and/or password"
+                return render_template("error.html", msg=msg)
 
             else:
                 # Remember which user has logged in
                 session["user_id"] = verifyAdmin[0]["adminID"]
+                session["admin"] = "yes"
 
                 # Redirect user to admin home page
                 return redirect("/admin")
     else:
 
-        return render_template("login.html")
+        return render_template("admin-login.html")
 
 
 @app.route("/admin", methods=["GET"])
@@ -362,10 +365,13 @@ def admin():
 
 @app.route("/admin-register", methods=["GET", "POST"])
 def adminRegister():
-
+    adminCode = "bookThatThang"
     if request.method == "POST":
 
         # Form validation
+        if not request.form.get("adminCode"):
+            msg = "You didn't enter an admin code."
+            return render_template("error")
         if not request.form.get("email"):
             msg = "You didn't enter an email."
             return render_template("error.html", msg=msg)
@@ -386,6 +392,10 @@ def adminRegister():
             msg = "Passwords did not match."
             return render_template("error.html", msg=msg)
 
+        elif request.form.get("adminCode") != adminCode:
+            msg = "Invalid admin code."
+            return render_template("error.html", msg=msg)
+
         # Query database for username
         rows = db.execute(adminLogin, email=request.form.get("email"))
 
@@ -399,12 +409,8 @@ def adminRegister():
             email = request.form.get("email").lower()
             pwdHash = generate_password_hash(request.form.get("password"), method='pbkdf2:sha1', salt_length=8)
 
-            regAdmin = db.execute(newAdmin, email=email, pwdHash=pwdHash)
-
-            if regAdmin:
-                # Redirect user to log in page
+            db.execute(newAdmin, email=email, pwdHash=pwdHash)
                 msg = "Congrats! You are now registered as an admin! You may now log in."
-
                 return render_template("admin-login.html")
 
             else:
