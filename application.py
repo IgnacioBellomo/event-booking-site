@@ -39,7 +39,7 @@ adminLogin = "SELECT * FROM admin WHERE email = :email"
 newAdmin = "INSERT INTO admin ( email, pwdHash ) VALUES ( :email, :pwdHash )"
 editVenue = "UPDATE venues SET venueName = :venueName, capacity = :capacity WHERE venueID = :venueID"
 adminReservations = "SELECT *, SUM(tickets) AS totalTickets FROM (SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID) GROUP BY eventID"
-allTrans = "SELECT * FROM transactions"
+
 
 # Configure application
 app = Flask(__name__)
@@ -414,6 +414,9 @@ def admin():
     if 'admin' not in session.keys():
         return redirect("/")
     if request.method == "GET":
+        events = db.execute(adminReservations)
+        return render_template("admin-index.html", events=events)
+
         events = db.execute(adminReservations)
         return render_template("admin-index.html", events=events)
 

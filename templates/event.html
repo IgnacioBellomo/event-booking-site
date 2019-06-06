@@ -1,28 +1,47 @@
 {% extends "base.html" %}
+{% block style %}
+
+<style>
+body {
+    background-image: url("/static/img/event_pic/second.jpg");
+    background-repeat: no-repeat;
+    background-color: #cccccc;
+    background-size: cover;
+}
+
+.card {
+    opacity: 0.9;
+}
+
+
+</style>
+
+{% endblock %}
 
 {% block title %}{{event.eventName}}{% endblock %}
 
 {% block body %}
 
-<br>
-<div class="card" centered>
-    <div class="card-header">
-        <p><span style="font-size:14px">Event Type:</span> {{ event.type }}</p>
-    </div>
-    <div class="card-body">
-        <h3 class="card-title">{{ event.eventName }}</h3>
-        <p class="card-text">{{ event.description }}</p>
-    </div>
-    <div class="card-footer text-muted">
-        <p>Event Starts: {{ event.startDate }} at {{ event.startTime }}</p>
-        <p>Event Ends: {{ event.endDate }} at {{ event.endTime }}</p>
-        <p>Venue: {{event.venueName}}</p>
-        <p>Tickets Left: {{ event.ticketsLeft }}</p>
 
-    </div>
-        <a href="{{ '/book/%s'%event.eventID|urlencode }}" class="btn btn-success">Book</a>
+<div class="card-column" mx-auto>
+    <div class="card" mx-auto>
+        <div class="card-header">
+            <p><span style="font-size:14px">Event Type:</span> {{ event.type }}</p>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">{{ event.eventName }}</h3>
+            <p class="card-text">{{ event.description }}</p>
+        </div>
+        <div class="card-footer text-muted">
+            <p>Event Starts: {{ event.startDate }} at {{ event.startTime }}</p>
+            <p>Event Ends: {{ event.endDate }} at {{ event.endTime }}</p>
+            <p>Venue: {{event.venueName}}</p>
+            <p>Tickets Left: {{ event.ticketsLeft }}</p>
+
+        </div>
+            <a href="{{ '/book/%s'%event.eventID|urlencode }}" class="btn btn-success">Book</a>
+        </div>
 </div>
-
 
 {%endblock %}
 
