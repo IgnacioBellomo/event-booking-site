@@ -1,0 +1,36 @@
+{% extends "baseadmin.html" %}
+
+{% block title %}Events{% endblock %}
+
+{% block body %}
+<h2>Edit Events</h2>
+<table class="table table-bordered table-hover">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Event ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Type</th>
+      <th scope="col">Venue ID</th>
+      <th scope="col">Start</th>
+      <th scope="col">Finish</th>
+      <th scope="col">Tickets Left</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for event in events %}
+    <tr>
+      <th scope="row">{{event.eventID}}</th>
+      <td scope="row"><a href="{{ '/event/%s'%event.eventID|urlencode }}">{{event.eventName}}</a></td>
+      <td scope="row">{{event.type}}</td>
+      <td scope="row">{{event.venueID}}</td>
+      <td scope="row">{{event.startDate}}, {{event.startTime}}</td>
+      <td scope="row">{{event.endDate}}, {{event.endTime}}</td>
+      <td scope="row">{{event.tickets}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block script %}{% endblock %}

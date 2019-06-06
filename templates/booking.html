@@ -1,34 +1,32 @@
 {% extends "base.html" %}
 
-{% block title %}Book - {{event.name}}{% endblock %}
+{% block title %}Book - {{event.eventName}}{% endblock %}
 
 {% block body %}
 
-<div class="container col-lg-3 col-md-6 col-sm-12" centered>
+<div class="container" centered>
     <form action="{{ '/book/%s'%event.eventID|urlencode }}" method="post" name="book">
         <div class="form-group">
+            <p><span style="font-size:14px">Event Type:</span> {{ event.type }}</p>
             <h3>{{event.eventName}}</h3><br>
-            <p>{{event.description}}</p>
-            <p>{{venue.venueName}}</p>
-            <p>{{event.type}}</p>
-            <p>{{event.startDate}}</p>
-            <p>{{event.startTime}}</p>
-            <p>{{event.endDate}}</p>
-            <p>{{event.endTime}}</p>
+            <p>{{event.description}}</p><br>
+            <p>Event Starts: {{ event.startDate }} at {{ event.startTime }}</p>
+            <p>Event Ends: {{ event.endDate }} at {{ event.endTime }}</p>
+            <p>Venue: {{venue.venueName}}</p>
             <br>
-            <p>{{usr.fName}} {{usr.lName}}</p>
-            <p>{{usr.email}}</p>
+            <p>Name on the ticket: <span><strong>{{usr.fName}} {{usr.lName}}</strong></span></p>
+            <p>Email address: <span><strong>{{usr.email}}</strong></span></p>
         </div>
         <div class="form-box">
-            <label for="numberTickets">Number of tickets</label><br>
+            <label for="numberTickets">Number of tickets: </label>
             <select name="tickets">
                 {% for i in range(event.ticketsLeft) %}
                 <option value="{{i+1}}">{{i + 1}}</option>
                 {% endfor %}
             </select>
-        </div>
+        </div><br>
         <div class="form-box">
-            <button class="btn btn-primary" type="submit" id="post">Book</button>
+            <button class="btn btn-success" type="submit" id="post">Book</button>
         </div>
     </form>
 </div>
