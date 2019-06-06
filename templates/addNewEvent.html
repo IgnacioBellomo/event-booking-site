@@ -8,15 +8,15 @@
     <form action="#" method="POST">
         <div class="form-group">
             <label for="eventName">Event Name</label><br>
-            <input class="form-control" autofocus required id="eventName" name="eventName"><br>
-            <label for="venues">Select Venue</label><br>
-            <select name="venues" id="venues">
-                <option value="#">{{#}}</option>
+            <input class="form-control" autofocus required id="eventName" name="eventName" type="text"><br>
+            <label for="venue">Select Venue</label><br>
+            <select name="venue" id="venues">
+                {% for venue in venues %}
+                    <option value="{{venue['venueID']}}">{{venue['venueName']}}</option>
+                {% endfor %}
             </select><br>
             <label for="eventType">Select Event Type</label><br>
-            <select name="eventType" id="eventType">
-                <option value="#">{{#}}</option>
-            </select><br>
+            <input class="form-control" id="eventType" name="eventType" type="text"><br>
             <label for="eventStartDate">Event Start Date</label><br>
             <input type="date" name="eventStartDate" id="eventStartDate"><br>
             <label for="eventStartTime">Event Start Time</label><br>
@@ -25,8 +25,8 @@
             <input type="date" name="eventEndDate" id="eventEndDate"><br>
             <label for="eventEndTime">Event End Time</label><br>
             <input type="time" id="eventEndTime" name="eventEndTime"><br>
-            <label for="tickets">Total Tikets</label><br>
-            <input class="form-control" required id="tickets" name="tickets"><br>
+            <label for="tickets">Total Tickets</label><br>
+            <input class="form-control" required id="tickets" name="tickets" type="number"><br>
             <label for="eventDescription">Description</label><br>
             <textarea class="form-control" rows="10" cols="50" id="eventDescription" name="eventDescription"></textarea><br>
             <button type="submit" class="btn btn-success">Create</button>

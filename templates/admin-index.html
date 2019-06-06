@@ -3,19 +3,18 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-
 {% for event in events %}
     <div class="container col-lg-3 col-md-6 col-sm-12" centered>
         <h3>{{ event.eventName }}</h3><br>
         <p>{{ event.description }}</p>
-        <p>{{ event.venueID }}</p>
+        <p>{{ event.venueName }}</p>
         <p>{{ event.eventType }}</p>
         <p>{{ event.startDate }}</p>
         <p>{{ event.startTime }}</p>
         <p>{{ event.endDate }}</p>
         <p>{{ event.endTime }}</p>
         <p>Tickets Left:</p>
-        <p>{{ event.tickets }}</p>
+        <p>{{ event.ticketsLeft }}</p>
         <a href="{{ '/event/%s'%event.eventID|urlencode }}">Edit Event</a>
     </div>
 {% endfor %}
