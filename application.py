@@ -30,7 +30,7 @@ allEventQry = "SELECT * FROM events"
 allVenueQry = "SELECT * FROM venues"
 
 # Admin
-editEvent = "UPDATE events SET eventName = :eventName, tickets = :tickets, type = :type, description = :description, venueID = :venueID WHERE eventID = :eventID"
+editEvent = "UPDATE events SET eventName = :eventName, ticketsLeft = :ticketsLeft, type = :type, description = :description, venueID = :venueID WHERE eventID = :eventID"
 newVenue = "INSERT INTO venues (venueName, capacity, address1, address2, city, state, zip, adminID) VALUES (:venueName, :capacity, :address1, :address2, :city, :state, :zipCode, :adminID )"
 newEvent = "INSERT INTO events (eventName, ticketsLeft, type, startDate, startTime, endDate, endTime, description, venueID, adminID) VALUES (:eventName, :tickets, :eventType, :startDate, :startTime, :endDate, :endTime, :description, :venueID, :adminID )"
 adminLogin = "SELECT * FROM admin WHERE email = :email"
@@ -365,6 +365,11 @@ def admin():
             return render_template("admin-login.html", msg=msg)
         else:
             events = db.execute(allEventQry)
+            venues = db.execute(allVenueQry)
+            for event in events:
+                for venue in venues:
+                    if venue["venueID"] == event["venueID"]:
+                        event["venueName"] = venue["venueName"]
             return render_template("admin-index.html", events=events)
 
 
