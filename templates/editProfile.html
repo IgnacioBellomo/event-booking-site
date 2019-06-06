@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block body %}
+<h2 class="text-center">Edit your profile</h2><br>
+<div class="container col-lg-3 col-md-6 col-sm-12" centered>
+    <form action="/myProfile" method="POST" name="myProfile">
+    <div class="form-group">
+        <label for="fname">First Name</label><br>
+        <input class="form-control" type="text" id="fName" name="fName" value="{{user.fName}}"><br>
+        <label for="lname">Last Name</label><br>
+        <input class="form-control" type="text" id="lName" name="lName" value="{{user.lName}}"><br>
+        <label for="email">Email Address</label><br>
+        <input class="form-control" id="email" type="text" name="email" value="{{user.email}}"><br>
+        <input type="hidden" name="editType" value="info">
+    </div>
+        <button type="submit" class="btn btn-success" id="submit">Save Changes</button>
+    </form>
+    <a href="/change-password">Change Password</a>
+</div>
+
+
+{%endblock %}
+
+{% block script %}{% endblock %}

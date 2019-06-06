@@ -22,6 +22,8 @@ ticketReturn = "UPDATE events SET ticketsLeft = ticketsLeft + :tickets WHERE eve
 allTicketQry = "SELECT eventID, SUM(tickets), time FROM transactions GROUP BY eventID HAVING userID = :userID"
 eventTicketQry = "SELECT SUM(tickets) AS totalTickets FROM transactions GROUP BY eventID HAVING userID = :userID AND eventID = :eventID"
 userReservations = "SELECT *, SUM(tickets) AS totalTickets FROM (SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID AND transactions.userID = :userID) GROUP BY eventID"
+editProfileInfo = "UPDATE users SET fName = :fName, lName = :lName, email = :email WHERE userID = :userID"
+editPassword = "UPDATE users SET pwdHash = :pwdHash WHERE userID = :userID"
 
 # Both
 venueQry = "SELECT * FROM venues WHERE venueID = :venueID"
@@ -228,25 +230,6 @@ def event(eventID):
 
                 return render_template("event.html", event=events[0])
 
-
-    """
-
-    elif request.method == "POST":
-
-
-
-        Save results of ticket quantity change inside DB
-
-        if new ticket count is 0:
-
-            redirect("/", msg="your tickets for (eventTitle) have been cancelled")
-
-        else:
-
-            redirect("/thank-you.html", msg="your tickets for (eventTitle) have been saved")
-
-        """
-
 @app.route("/my-reservations", methods=["GET"])
 @login_required
 def myReservations():
@@ -263,8 +246,63 @@ def myReservations():
         tic["confirmation"] = confirmation
     userTickets = [x for x in userTicket if x not in remover]
     return render_template("my-reservations.html", userTickets=userTickets)
-        #Query DB for all reservations belonging to USER and display them in a table with related info
-        #if user clicks on a row or link of an event, a get request will go out with the varible in the URL
+
+@app.route("/myProfile", methods=["GET", "POST"])
+@login_required
+def myProfile():
+    if 'admin' in session.keys():
+        return redirect("/admin")\
+
+    if request.method == "POST":
+        if request.form.get("editType") == "info":
+            if not request.form.get("fName"):
+                msg = "You didn't enter a first name."
+                return render_template("error.html", msg=msg)
+            elif not request.form.get("lName"):
+                msg = "You didn't enter a last name."
+                return render_template("error.html", msg=msg)
+            elif not request.form.get("email"):
+                msg = "You didn't enter an email."
+                return render_template("error.html", msg=msg)
+            else:
+                db.execute(editProfileInfo, fName=request.form.get("fName"), lName=request.form.get("lName"), email=request.form.get("email"), userID=session["user_id"])
+                msg = "Profile succesfully updated."
+                return render_template("confirmation.html", msg=msg)
+        elif request.form.get("editType") == "pass":
+            if not request.form.get("oldPassword"):
+                msg = "You didn't enter your old password."
+                return render_template("error.html", msg=msg)
+            elif not request.form.get("newPassword"):
+                msg = "You didn't enter a new password."
+                return render_template("error.html", msg=msg)
+            elif not request.form.get("confirmPassword"):
+                msg = "You didn't confirm your password."
+                return render_template("error.html", msg=msg)
+            elif not passwordValid(request.form.get("newPassword")):
+                msg = "Password must contain at least 1 letter,1 number, and be at least 8 characters long."
+                return render_template("error.html", msg=msg)
+            elif request.form.get("newPassword") != request.form.get("confirmPassword"):
+                msg = "Passwords didn't match!"
+                return render_template("error.html", msg=msg)
+            else:
+                pwdHash = generate_password_hash(request.form.get("newPassword"), method='pbkdf2:sha1', salt_length=8)
+                db.execute(editPassword, pwdHash=pwdHash, userID=session["user_id"])
+                msg = "Password updated."
+                return render_template("confirmation.html", msg=msg)
+        else:
+            return redirect("/myProfile")
+    else:
+        user = db.execute(userQry, userID=session["user_id"])
+        return render_template("editProfile.html", user=user[0])
+
+@app.route("/change-password", methods=["GET"])
+@login_required
+def change_Password():
+    return render_template("editPassword.html")
+
+
+
+
 
 @app.route("/book/<eventID>", methods=["POST", "GET"])
 @login_required
