@@ -413,6 +413,8 @@ def adminRegister():
             msg = "Congrats! You are now registered as an admin! You may now log in."
             return render_template("admin-login.html")
 
+
+    # User reached route via GET (as by clicking a link or via redirect)
     else:
 
         return render_template("admin-register.html")
