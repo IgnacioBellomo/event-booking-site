@@ -15,7 +15,7 @@
         <p>{{ event.endTime }}</p>
         <p>Tickets Left:</p>
         <p>{{ event.ticketsLeft }}</p>
-        <a href="{{ '/event/%s'%event.eventID|urlencode }}">Edit Event</a>
+        <a href="{{ '/edit-event/%s'%event.eventID|urlencode }}">Edit Event</a>
     </div>
 {% endfor %}
 

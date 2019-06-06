@@ -36,6 +36,7 @@ newEvent = "INSERT INTO events (eventName, ticketsLeft, type, startDate, startTi
 adminLogin = "SELECT * FROM admin WHERE email = :email"
 newAdmin = "INSERT INTO admin ( email, pwdHash ) VALUES ( :email, :pwdHash )"
 editVenue = "UPDATE venues SET venueName = :venueName, capacity = :capacity WHERE venueID = :venueID"
+adminReservations = "SELECT *, SUM(tickets) AS totalTickets FROM (SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID) GROUP BY eventID"
 
 
 # Configure application
@@ -63,7 +64,8 @@ db = SQL("sqlite:///bookThatThang.db")
 
 @app.route("/")
 def index():
-
+    if session["admin"]:
+        return redirect("/admin")
     """ Show a list of event thumbnail images which point to selected single event page """
     events = db.execute(allEventQry)
     venues = db.execute(allVenueQry)
@@ -131,6 +133,8 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if session["admin"]:
+        return redirect("/admin")
     """Register user"""
     if request.method == "POST":
 
@@ -201,6 +205,8 @@ def checkRegistration():
 
 @app.route("/event/<eventID>", methods=["GET", "POST"])
 def event(eventID):
+    if session["admin"]:
+        return redirect("/admin")
     if request.method == "GET":
         if not eventID or eventID.isdigit() is False:
             return redirect("/")
@@ -244,6 +250,8 @@ def event(eventID):
 @app.route("/my-reservations", methods=["GET"])
 @login_required
 def myReservations():
+    if session["admin"]:
+        return redirect("/admin")
     userTicket = db.execute(userReservations, userID=session["user_id"])
     remover = []
     for tic in userTicket:
@@ -261,6 +269,8 @@ def myReservations():
 @app.route("/book/<eventID>", methods=["POST", "GET"])
 @login_required
 def book(eventID):
+    if session["admin"]:
+        return redirect("/admin")
     if request.method == "POST":
         if not request.form.get("tickets"):
             msg = "no tic"
@@ -289,6 +299,8 @@ def book(eventID):
 @app.route("/return/<eventID>", methods=["POST", "GET"])
 @login_required
 def cancel(eventID):
+    if session["admin"]:
+        return redirect("/admin")
     if request.method == "POST":
         if not eventID:
             msg = "no id"
@@ -440,12 +452,36 @@ def adminRegister():
 @app.route("/admin-events", methods=["GET"])
 @login_required
 def adminEvents():
-
-    events = db.execute(allEventQry)
-
-    if events:
-
+    if not session["admin"]:
+        msg = "You must be an admin to access that page. Please log in."
+        return render_template("admin-login.html", msg=msg)
+    if request.method == "GET":
+        events = db.execute(allEventQry)
         return render_template("admin-events.html", events=events)
+
+@app.route("/admin-venues", methods=["GET"])
+@login_required
+def adminVenues():
+    if not session["admin"]:
+        msg = "You must be an admin to access that page. Please log in."
+        return render_template("admin-login.html", msg=msg)
+    if request.method == "GET":
+        venues = db.execute(allVenueQry)
+        return render_template("admin-venues.html", venues=venues)
+
+@app.route("/admin-ticketSales", methods=["GET"])
+@login_required
+def adminTicketSales():
+    if not session["admin"]:
+        msg = "You must be an admin to access that page. Please log in."
+        return render_template("admin-login.html", msg=msg)
+    if request.method == "GET":
+        events = db.execute(adminReservations)
+        return render_template("admin-ticketSales.html", events=events)
+
+
+
+
 
 @app.route("/add-venue", methods=["GET", "POST"])
 @login_required

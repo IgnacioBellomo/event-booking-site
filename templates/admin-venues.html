@@ -11,15 +11,17 @@
       <th scope="col">Name</th>
       <th scope="col">Address</th>
       <th scope="col">Capacity</th>
+      <th scope="col">Edit</th>
     </tr>
   </thead>
   <tbody>
-    {% for %}
+    {% for venue in venues %}
     <tr>
-      <th scope="row">{{venueID}}</th>
-      <td scope="row"><a href="#">{{name}}</a></td>
-      <td scope="row">{{address1}}, {{address2}}, {{city}}, {{state}}, {{zip}}</td>
-      <td scope="row">{{capacity}}</td>
+      <th scope="row">{{venue.venueID}}</th>
+      <td scope="row">{{venue.venueName}}</td>
+      <td scope="row">{{venue.address1}}, {{venue.address2}}, {{venue.city}}, {{venue.state}}, {{venue.zip}}</td>
+      <td scope="row">{{venue.capacity}}</td>
+      <td scope="row"><a href="{{ '/edit-venue/%s'%venue.venueID|urlencode }}">Edit this venue</a></td>
     </tr>
     {% endfor %}
   </tbody>
