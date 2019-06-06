@@ -1,6 +1,6 @@
 th = document.getElementsByTagName('th');
 let c;
-for ( let c = 0; c < th.length; c++){
+for ( c = 0; c < th.length; c++){
 
     th[c].addEventListener('click', item(c));
 
@@ -9,7 +9,8 @@ for ( let c = 0; c < th.length; c++){
 function item(){
 
     return function(){
-        sortTable(c);
+      console.log(c);
+      sortTable(c);
     }
 }
 
