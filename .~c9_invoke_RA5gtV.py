@@ -438,8 +438,7 @@ def adminEvents():
 
     if events:
 
-return render_template("admin-events.html", events=events)
-
+        return render_template("admin-events.html", events=events)
 @app.route("/add-venue", methods=["GET", "POST"])
 @login_required
 def addVenue():
