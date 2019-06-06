@@ -558,7 +558,7 @@ def addVenue():
         else:
             db.execute(newVenue, venueName=request.form.get("venueName"), capacity=request.form.get("capacity"), address1=request.form.get("venueAddress1"), address2=request.form.get("venueAddress2"), city=request.form.get("venueCity"), state=request.form.get("state"), zipCode=request.form.get("zip"), adminID=session["user_id"])
             msg = "Venue created"
-            return render_template("admin-index.html", msg=msg)
+            return render_template("admin-confirmation.html", msg=msg)
     else:
         return render_template("addNewVenue.html")
 
@@ -609,7 +609,7 @@ def addEvent():
         else:
             db.execute(newEvent, eventName=request.form.get("eventName"), tickets=request.form.get("tickets"), eventType=request.form.get("eventType"), startDate=request.form.get("eventStartDate"), startTime=request.form.get("eventStartTime"), endDate=request.form.get("eventEndDate"), endTime=request.form.get("eventEndTime"), description=request.form.get("eventDescription"), venueID=request.form.get("venue"), adminID=session["user_id"])
             msg = "Event created."
-            return redirect ("/admin")
+            return render_template("admin-confirmation.html", msg=msg)
     else:
         venues = db.execute(allVenueQry)
         return render_template("addNewEvent.html", venues=venues)
@@ -632,7 +632,7 @@ def edit_Venue(venueID):
         else:
             db.execute(editVenue, venueName=request.form.get("venueName"), capacity=request.form.get("capacity"), venueID=venueID)
             msg = "Venue updated."
-            return redirect("/admin")
+            return render_template("admin-confirmation.html", msg=msg)
     else:
         if not venueID:
             msg = "no venue id"
@@ -661,8 +661,8 @@ def edit_Event(eventID):
             return render_template("error.html", msg=msg)
         else:
             db.execute(editEvent, eventName=request.form.get("eventName"), ticketsLeft=request.form.get("tickets"), description=request.form.get("eventDescription"), eventID=eventID)
-            msg = "Venue updated."
-            return redirect("/admin")
+            msg = "Event updated."
+            return render_template("admin-confirmation.html", msg=msg)
     else:
         if not eventID:
             msg = "no event id"

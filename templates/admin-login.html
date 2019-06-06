@@ -1,4 +1,4 @@
-{% extends "baseadmin.html" %}
+{% extends "base.html" %}
 
 {% block title %}
 Login
@@ -24,7 +24,7 @@ Login
             </div>
         {% else %}
                 <div class="container col-lg-3 col-md-6 col-sm-12" centered>
-                <h2>New admin? Click <a href="/admin-register">here</a></h2>
+                <h4>New admin? Click <a href="/admin-register">here</a></h4>
                 <form action="/admin-login" method="POST">
                     <div class="form-group">
                         <div class="form-box">
