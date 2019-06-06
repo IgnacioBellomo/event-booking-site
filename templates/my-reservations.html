@@ -4,7 +4,7 @@
 
 {% block body %}
 
-<table class="table table-bordered">
+<table class="table table-bordered" id="myTable">
   <thead class="thead-light">
     <tr>
       <th scope="col">Booked</th>
@@ -40,4 +40,4 @@
 
 {%endblock %}
 
-{% block script %}{% endblock %}
+{% block script %} <script src="static/script/sorting.js" ></script> {% endblock %}
