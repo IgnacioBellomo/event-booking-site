@@ -328,13 +328,11 @@ def admin_Login():
             return render_template("error.html", msg=msg)
 
         # Ensure password was submitted
-        if not request.form["password"]:
+        elif not request.form["password"]:
             msg = "You must provide password!"
             return render_template("error.html", msg=msg)
 
         else:
-            msg = "You must provide password!"
-            return render_template("error.html", msg=msg)
 
             """Check password against hash using hash function"""
 
@@ -352,8 +350,8 @@ def admin_Login():
                 session["user_id"] = verifyAdmin[0]["adminID"]
                 session["admin"] = "yes"
 
-                # Redirect user to admin home page
-                return redirect("/admin")
+            # Redirect user to admin home page
+            return redirect("/admin")
     else:
 
         return render_template("admin-login.html")
@@ -362,12 +360,14 @@ def admin_Login():
 @app.route("/admin", methods=["GET"])
 @login_required
 def admin():
+
     if not session["admin"]:
         msg = "You must be an admin to access that page. Please log in."
         return render_template("admin-login.html", msg=msg)
 
-        events = db.execute(allEventQry)
 
+    else:
+        events = db.execute(allEventQry)
         return render_template("admin-index.html", events=events)
 
 
@@ -380,10 +380,11 @@ def adminRegister():
     if request.method == "POST":
 
         # Form validation
-        if not request.form.get("adminCode"):
+        if request.form.get("adminCode") != adminCode:
             msg = "You didn't enter an admin code."
-            return render_template("error")
-        if not request.form.get("email"):
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("email"):
             msg = "You didn't enter an email."
             return render_template("error.html", msg=msg)
 
@@ -438,7 +439,7 @@ def adminEvents():
 
     if events:
 
-return render_template("admin-events.html", events=events)
+        return render_template("admin-events.html", events=events)
 
 @app.route("/add-venue", methods=["GET", "POST"])
 @login_required
