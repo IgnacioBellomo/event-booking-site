@@ -30,9 +30,9 @@ allEventQry = "SELECT * FROM events"
 allVenueQry = "SELECT * FROM venues"
 
 # Admin
-editEvent = "UPDATE events SET name = :name, tickets = :tickets, type = :type, description = :description, venueID = :venueID WHERE eventID = :eventID"
-newVenue = "INSERT INTO venues (venueID, name, capacity, address1, address2, city, state, zip, adminID) VALUES ( NULL, :name, :capacity, :address1, :address2, :city, :state, :zip, :adminID )"
-newEvent = "INSERT INTO events (eventID, name, tickets, type, start, finish, description, venueID, adminID) VALUES ( NULL, :name, :tickets, :type, :start, :finish, :description, :venueID, :adminID )"
+editEvent = "UPDATE events SET eventName = :eventName, tickets = :tickets, type = :type, description = :description, venueID = :venueID WHERE eventID = :eventID"
+newVenue = "INSERT INTO venues (venueName, capacity, address1, address2, city, state, zip, adminID) VALUES (:name, :capacity, :address1, :address2, :city, :state, :zipCode, :adminID )"
+newEvent = "INSERT INTO events (eventName, tickets, type, start, finish, description, venueID, adminID) VALUES (:name, :tickets, :type, :start, :finish, :description, :venueID, :adminID )"
 adminLogin = "SELECT * FROM admin WHERE email = :email"
 newAdmin = "INSERT INTO admin ( email, pwdHash ) VALUES ( :email, :pwdHash )"
 
@@ -357,6 +357,9 @@ def admin_Login():
 @app.route("/admin", methods=["GET"])
 @login_required
 def admin():
+    if not session["admin"]:
+        msg = "You must be an admin to access that page. Please log in."
+        return render_template("admin-login.html", msg=msg)
 
         events = db.execute(allEventQry)
 
@@ -418,3 +421,37 @@ def adminRegister():
     else:
 
         return render_template("admin-register.html")
+
+@app.route("/add-venue", methods=["GET", "POST"])
+@login_required
+def addVenue():
+    if not session["admin"]:
+        msg = "You must be an admin to access that page. Please log in."
+        return render_template("admin-login.html", msg=msg)
+
+    if request.method == "POST":
+        if not request.form.get("venueName"):
+            msg = "You did not enter a name for the venue."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("venueAddress1"):
+            msg = "You didn't fill out the Address 1 line."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("venueAddress2"):
+            msg = "You didn't fill out the Address 2 line."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("venueCity"):
+            msg = "You didn't fill out the City line."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("state"):
+            msg = "You didn't fill out the State line."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("zip"):
+            msg = "You didn't fill out the Zip Code line."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("capacity"):
+            msg = "You didn't fill out the Capacity line."
+            return render_template("error.html", msg=msg)
+        else:
+            db.execute(newVenue, venueName=request.form.get("venueName"), capacity=request.form.get("capacity"), address1=request.form.get("venueAddress1"), address2=request.form.get("venueAddress2"), city=request.form.get("venueCity"), state=request.form.get("state"), zipCode=request.form.get("zip"), adminID=session["user_id"])
+            msg = "Venue created"
+            return render_template("confirmation.html", msg=msg)
