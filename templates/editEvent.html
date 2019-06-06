@@ -9,7 +9,7 @@
     <div >
         Event #{{event.eventID}}
     </div><br>
-<form action="#" method="POST">
+        <form action="{{ '/edit-event/%s'%event.eventID|urlencode }}" method="POST">
         <div class="form-group">
             <label for="eventName">Event Name</label><br>
             <input class="form-control" autofocus required id="eventName" name="eventName" value='{{event.eventName}}'><br>

@@ -578,7 +578,7 @@ def edit_Event(eventID):
             msg = "You didn't enter a description for the event."
             return render_template("error.html", msg=msg)
         else:
-            db.execute(editVenue, venueName=request.form.get("eventName"), ticketsLeft=request.form.get("tickets"), description=request.form.get("eventDescription"), eventID=eventID)
+            db.execute(editEvent, eventName=request.form.get("eventName"), ticketsLeft=request.form.get("tickets"), description=request.form.get("eventDescription"), eventID=eventID)
             msg = "Venue updated."
             return redirect("/admin")
     else:

@@ -8,8 +8,7 @@
     <div >
         Venue #{{venue.venueID}}
     </div><br>
-<div class="container col-lg-3 col-md-6 col-sm-12" centered>
-    <form action="{{ '/edie-venue/%s'%venue.venueID|urlencode }}" method="POST">
+    <form action="{{ '/edit-venue/%s'%venue.venueID|urlencode }}" method="POST">
         <div class="form-group">
             <label for="venueName">Name</label><br>
             <input type="text" class="form-control" autofocus required id="venueName" name="venueName" value='{{venue.venueName}}'><br>
