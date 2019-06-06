@@ -213,7 +213,7 @@ def event(eventID):
                     if venue["venueID"] == event["venueID"]:
                         event["venueName"] = venue["venueName"]
 
-            if len(event) != 1:
+            if len(events) != 1:
 
                 return redirect("/")
 
