@@ -12,16 +12,11 @@
         <div class="form-group">
             <label for="venueName">Name</label><br>
             <input type="text" class="form-control" autofocus required id="venueName" name="venueName" value='{{venue.venueName}}'><br>
-            <label for="venueAddress1">Address 1</label><br>
-            <p class="form-control" id="venueAddress1">{{venue.address1}}</p><br>
-            <label for="venueAddress2">Address 2</label><br>
-            <p class="form-control" id="venueAddress2">{{venue.address2}}</p><br>
-            <label for="venueCity">City</label><br>
-            <p class="form-control" id="venueCity">{{venue.city}}</p><br>
-            <label for="state">State</label><br>
-            <p class="form-control" id="state">{{venue.state}}</p><br>
-            <label for="zip">Zip Code</label><br>
-            <p class="form-control" id="zip">{{venue.zip}}</p><br>
+            <p>Address 1: {{venue.address1}}</p><br>
+            <p>Address 2: {{venue.address2}}</p><br>
+            <p>City: {{venue.city}}</p><br>
+            <p>State: {{venue.state}}</p><br>
+            <p>Zip Code: {{venue.zip}}</p><br>
             <label for="capacity">Capacity</label><br>
             <input type="number" class="form-control" required id="capacity" name="capacity" value='{{venue.capacity}}'><br>
             <button type="submit" class="btn btn-success">Save changes</button>

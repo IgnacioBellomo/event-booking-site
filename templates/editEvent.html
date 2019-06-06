@@ -3,28 +3,18 @@
 {% block title %}Edit Event{% endblock %}
 
 {% block body %}
-
-    <br>
     <div class="container col-lg-3 col-md-6 col-sm-12" centered>
     <div >
-        Event #{{event.eventID}}
+        <h3>Event #{{event.eventID}}</h3>
     </div><br>
         <form action="{{ '/edit-event/%s'%event.eventID|urlencode }}" method="POST">
         <div class="form-group">
             <label for="eventName">Event Name</label><br>
             <input class="form-control" autofocus required id="eventName" name="eventName" value='{{event.eventName}}'><br>
-            <label for="venues">Venue</label><br>
-            <p name="venues" id="venues">{{event.venueID}}</p><br>
-            <label for="eventType">Event Type</label><br>
-            <p name="eventType" id="eventType">{{event.type}}</p><br>
-            <label for="eventStartDate">Event Start Date</label><br>
-            <p id="eventStartDate" name="eventStartDate">{{event.startDate}}</p>
-            <label for="eventStartTime">Event Start Time</label><br>
-            <p id="eventStartTime" name="eventStartTime">{{event.startTime}}</p>
-            <label for="eventEndDate">Event End Date</label><br>
-            <p id="eventEndDate" name="eventEndDate">{{event.endDate}}</p>
-            <label for="eventEndTime">Event End Time</label><br>
-            <p id="eventEndTime" name="eventEndTime">{{event.endTime}}</p>
+            <label for="venues">Venue ID: {{event.venueID}}</label><br><br>
+            <label for="eventType">Event Type: {{event.type}}</label><br>
+            <label for="eventStartDate">Event Starts: {{event.startDate}} at {{event.startTime}}</label><br>
+            <label for="eventEndDate">Event Ends: {{event.endDate}} at {{event.endTime}}</label><br><br>
             <label for="tickets">Total Tikets</label><br>
             <input class="form-control" required id="tickets" name="tickets" value='{{event.ticketsLeft}}'><br>
             <label for="eventDescription">Description</label><br>
