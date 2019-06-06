@@ -20,7 +20,7 @@
     {% for event in events %}
     <tr>
       <th scope="row">{{event.eventID}}</th>
-      <td scope="row"><a href="{{ '/event/%s'%event.eventID|urlencode }}">{{event.eventName}}</a></td>
+      <td scope="row"><a href="{{ '/edit-event/%s'%event.eventID|urlencode }}">{{event.eventName}}</a></td>
       <td scope="row">{{event.type}}</td>
       <td scope="row">{{event.venueID}}</td>
       <td scope="row">{{event.startDate}}, {{event.startTime}}</td>
