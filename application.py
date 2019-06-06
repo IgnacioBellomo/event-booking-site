@@ -365,7 +365,10 @@ def admin():
 
 @app.route("/admin-register", methods=["GET", "POST"])
 def adminRegister():
-    adminCode = "bookThatThang"
+
+    # code must be matched to register
+    adminCode = "100"
+
     if request.method == "POST":
 
         # Form validation
@@ -418,3 +421,13 @@ def adminRegister():
     else:
 
         return render_template("admin-register.html")
+
+@app.route("/admin-events", methods=["GET"])
+
+def adminEvents():
+
+    events = db.execute(allEventQry)
+
+    if events:
+
+        return render_template("admin-events.html", events=events)
