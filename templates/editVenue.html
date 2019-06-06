@@ -6,26 +6,26 @@
     <br>
     <div class="container col-lg-3 col-md-6 col-sm-12" centered>
     <div >
-        Venue #{{#.venueID}}
+        Venue #{{venue.venueID}}
     </div><br>
 <div class="container col-lg-3 col-md-6 col-sm-12" centered>
-    <form action="#" method="POST">
+    <form action="{{ '/edie-venue/%s'%venue.venueID|urlencode }}" method="POST">
         <div class="form-group">
             <label for="venueName">Name</label><br>
-            <input class="form-control" autofocus required id="venueName" name="venueName" value='{{#.name}}'><br>
+            <input type="text" class="form-control" autofocus required id="venueName" name="venueName" value='{{venue.venueName}}'><br>
             <label for="venueAddress1">Address 1</label><br>
-            <p id="venueAddress1" name="venueAddress1">{{#.address1}}</p><br>
+            <p class="form-control" id="venueAddress1">{{venue.address1}}</p><br>
             <label for="venueAddress2">Address 2</label><br>
-            <p id="venueAddress2" name="venueAddress2">{{#.address2}}</p><br>
+            <p class="form-control" id="venueAddress2">{{venue.address2}}</p><br>
             <label for="venueCity">City</label><br>
-            <p id="venueCity" name="venueCity">{{#.city}}</p><br>
+            <p class="form-control" id="venueCity">{{venue.city}}</p><br>
             <label for="state">State</label><br>
-            <p id="state" name="state">{{#.state}}</p><br>
+            <p class="form-control" id="state">{{venue.state}}</p><br>
             <label for="zip">Zip Code</label><br>
-            <p id="zip" name="zip">{{#.zip}}</p><br>
+            <p class="form-control" id="zip">{{venue.zip}}</p><br>
             <label for="capacity">Capacity</label><br>
-            <input class="form-control" required id="capacity" name="capacity" value='{{#.capacity}}'><br>
-            <button type="submit" class="btn btn-success">Save</button>
+            <input type="number" class="form-control" required id="capacity" name="capacity" value='{{venue.capacity}}'><br>
+            <button type="submit" class="btn btn-success">Save changes</button>
         </div>
     </form>
 </div>

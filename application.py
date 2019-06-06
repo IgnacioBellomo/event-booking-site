@@ -30,11 +30,12 @@ allEventQry = "SELECT * FROM events"
 allVenueQry = "SELECT * FROM venues"
 
 # Admin
-editEvent = "UPDATE events SET eventName = :eventName, ticketsLeft = :ticketsLeft, type = :type, description = :description, venueID = :venueID WHERE eventID = :eventID"
+editEvent = "UPDATE events SET eventName = :eventName, ticketsLeft = :ticketsLeft, description = :description WHERE eventID = :eventID"
 newVenue = "INSERT INTO venues (venueName, capacity, address1, address2, city, state, zip, adminID) VALUES (:venueName, :capacity, :address1, :address2, :city, :state, :zipCode, :adminID )"
 newEvent = "INSERT INTO events (eventName, ticketsLeft, type, startDate, startTime, endDate, endTime, description, venueID, adminID) VALUES (:eventName, :tickets, :eventType, :startDate, :startTime, :endDate, :endTime, :description, :venueID, :adminID )"
 adminLogin = "SELECT * FROM admin WHERE email = :email"
 newAdmin = "INSERT INTO admin ( email, pwdHash ) VALUES ( :email, :pwdHash )"
+editVenue = "UPDATE venues SET venueName = :venueName, capacity = :capacity WHERE venueID = :venueID"
 
 
 # Configure application
@@ -529,3 +530,57 @@ def addEvent():
     else:
         venues = db.execute(allVenueQry)
         return render_template("addNewEvent.html", venues=venues)
+
+@app.route("/edit-venue/<venueID>", methods=["GET", "POST"])
+@login_required
+def edit_Venue(venueID):
+    if request.method == "POST":
+        if not venueID:
+            msg = "no venue id"
+            return render_template("error.html", msg=msg)
+        if not request.form.get("venueName"):
+            msg = "You did not enter a name for the venue."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("capacity"):
+            msg = "You didn't fill out the Capacity line."
+            return render_template("error.html", msg=msg)
+        else:
+            db.execute(editVenue, venueName=request.form.get("venueName"), capacity=request.form.get("capacity"), venueID=venueID)
+            msg = "Venue updated."
+            return redirect("/admin")
+    else:
+        if not venueID:
+            msg = "no venue id"
+            return render_template("error.html", msg=msg)
+        else:
+            venue = db.execute(venueQry, venueID=venueID)
+            return render_template("editVenue.html", venue=venue[0])
+
+@app.route("/edit-event/<eventID>", methods=["GET", "POST"])
+@login_required
+def edit_Event(eventID):
+    if request.method == "POST":
+        if not eventID:
+            msg = "no event id"
+            return render_template("error.html", msg=msg)
+        if not request.form.get("eventName"):
+            msg = "You did not enter a name for the event."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("tickets"):
+            msg = "You didn't enter a number of tickets."
+            return render_template("error.html", msg=msg)
+        elif not request.form.get("eventDescription"):
+            msg = "You didn't enter a description for the event."
+            return render_template("error.html", msg=msg)
+        else:
+            db.execute(editVenue, venueName=request.form.get("eventName"), ticketsLeft=request.form.get("tickets"), description=request.form.get("eventDescription"), eventID=eventID)
+            msg = "Venue updated."
+            return redirect("/admin")
+    else:
+        if not eventID:
+            msg = "no event id"
+            return render_template("error.html", msg=msg)
+        else:
+            event = db.execute(eventQry, eventID=eventID)
+            return render_template("editEvent.html", event=event[0])
+

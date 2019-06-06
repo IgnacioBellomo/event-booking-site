@@ -7,28 +7,28 @@
     <br>
     <div class="container col-lg-3 col-md-6 col-sm-12" centered>
     <div >
-        Event #{{#.eventID}}
+        Event #{{event.eventID}}
     </div><br>
 <form action="#" method="POST">
         <div class="form-group">
             <label for="eventName">Event Name</label><br>
-            <input class="form-control" autofocus required id="eventName" name="eventName" value='{{#.name}}'><br>
+            <input class="form-control" autofocus required id="eventName" name="eventName" value='{{event.eventName}}'><br>
             <label for="venues">Venue</label><br>
-            <p name="venues" id="venues">{{#.venueID}}</p><br>
+            <p name="venues" id="venues">{{event.venueID}}</p><br>
             <label for="eventType">Event Type</label><br>
-            <p name="eventType" id="eventType">{{#.eventType}}</p><br>
+            <p name="eventType" id="eventType">{{event.type}}</p><br>
             <label for="eventStartDate">Event Start Date</label><br>
-            <p id="eventStartDate" name="eventStartDate">{{#.startDate}}</p>
+            <p id="eventStartDate" name="eventStartDate">{{event.startDate}}</p>
             <label for="eventStartTime">Event Start Time</label><br>
-            <p id="eventStartTime" name="eventStartTime">{{#.startTime}}</p>
+            <p id="eventStartTime" name="eventStartTime">{{event.startTime}}</p>
             <label for="eventEndDate">Event End Date</label><br>
-            <p id="eventEndDate" name="eventEndDate">{{#.EndDate}}</p>
+            <p id="eventEndDate" name="eventEndDate">{{event.endDate}}</p>
             <label for="eventEndTime">Event End Time</label><br>
-            <p id="eventEndTime" name="eventEndTime">{{#.EndTime}}</p>
+            <p id="eventEndTime" name="eventEndTime">{{event.endTime}}</p>
             <label for="tickets">Total Tikets</label><br>
-            <input class="form-control" required id="tickets" name="tickets" value='{{#.tickets}}'><br>
+            <input class="form-control" required id="tickets" name="tickets" value='{{event.ticketsLeft}}'><br>
             <label for="eventDescription">Description</label><br>
-            <textarea class="form-control" rows="10" cols="50" id="eventDescription" name="eventDescription">{{#.description}}</textarea><br>
+            <textarea class="form-control" rows="10" cols="50" id="eventDescription" name="eventDescription">{{event.description}}</textarea><br>
             <button type="submit" class="btn btn-success">Save</button>
         </div>
     </form>
