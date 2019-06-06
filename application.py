@@ -64,7 +64,7 @@ db = SQL("sqlite:///bookThatThang.db")
 
 @app.route("/")
 def index():
-    if session["admin"]:
+    if 'admin' in session.keys():
         return redirect("/admin")
     """ Show a list of event thumbnail images which point to selected single event page """
     events = db.execute(allEventQry)
@@ -133,7 +133,7 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    if session["admin"]:
+    if 'admin' in session.keys():
         return redirect("/admin")
     """Register user"""
     if request.method == "POST":
@@ -205,7 +205,7 @@ def checkRegistration():
 
 @app.route("/event/<eventID>", methods=["GET", "POST"])
 def event(eventID):
-    if session["admin"]:
+    if 'admin' in session.keys():
         return redirect("/admin")
     if request.method == "GET":
         if not eventID or eventID.isdigit() is False:
@@ -250,7 +250,7 @@ def event(eventID):
 @app.route("/my-reservations", methods=["GET"])
 @login_required
 def myReservations():
-    if session["admin"]:
+    if 'admin' in session.keys():
         return redirect("/admin")
     userTicket = db.execute(userReservations, userID=session["user_id"])
     remover = []
@@ -269,7 +269,7 @@ def myReservations():
 @app.route("/book/<eventID>", methods=["POST", "GET"])
 @login_required
 def book(eventID):
-    if session["admin"]:
+    if 'admin' in session.keys():
         return redirect("/admin")
     if request.method == "POST":
         if not request.form.get("tickets"):
@@ -299,7 +299,7 @@ def book(eventID):
 @app.route("/return/<eventID>", methods=["POST", "GET"])
 @login_required
 def cancel(eventID):
-    if session["admin"]:
+    if 'admin' in session.keys():
         return redirect("/admin")
     if request.method == "POST":
         if not eventID:
