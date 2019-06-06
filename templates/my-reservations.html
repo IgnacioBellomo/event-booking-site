@@ -16,7 +16,6 @@
       <th scope="col">Event Time</th>
       <th scope="col">Number of Tickets</th>
       <th scope="col"></th>
-      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -31,7 +30,6 @@
       <td scope="row">{{tic["startTime"]}}</td>
       <td scope="row">{{tic["totalTickets"]}}</td>
       <td scope="row"><a href="{{ '/return/%s'%tic['eventID']|urlencode }}">Return</a></td>
-      <td scope="row"><a href="#">Cancel</a></td>
     </tr>
     {% endfor %}
   </tbody>

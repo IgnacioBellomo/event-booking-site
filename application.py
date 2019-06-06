@@ -37,7 +37,7 @@ adminLogin = "SELECT * FROM admin WHERE email = :email"
 newAdmin = "INSERT INTO admin ( email, pwdHash ) VALUES ( :email, :pwdHash )"
 editVenue = "UPDATE venues SET venueName = :venueName, capacity = :capacity WHERE venueID = :venueID"
 adminReservations = "SELECT *, SUM(tickets) AS totalTickets FROM (SELECT * FROM venues, events, transactions WHERE venues.venueID=events.venueID AND transactions.eventID = events.eventID) GROUP BY eventID"
-
+allTrans = "SELECT * FROM transactions"
 
 # Configure application
 app = Flask(__name__)
@@ -373,20 +373,12 @@ def admin_Login():
 @app.route("/admin", methods=["GET"])
 @login_required
 def admin():
-
+    if 'admin' not in session.keys():
+        return redirect("/")
     if request.method == "GET":
+        events = db.execute(adminReservations)
+        return render_template("admin-index.html", events=events)
 
-        if not session["admin"]:
-            msg = "You must be an admin to access that page. Please log in."
-            return render_template("admin-login.html", msg=msg)
-        else:
-            events = db.execute(allEventQry)
-            venues = db.execute(allVenueQry)
-            for event in events:
-                for venue in venues:
-                    if venue["venueID"] == event["venueID"]:
-                        event["venueName"] = venue["venueName"]
-            return render_template("admin-index.html", events=events)
 
 
 @app.route("/admin-register", methods=["GET", "POST"])
@@ -452,9 +444,8 @@ def adminRegister():
 @app.route("/admin-events", methods=["GET"])
 @login_required
 def adminEvents():
-    if not session["admin"]:
-        msg = "You must be an admin to access that page. Please log in."
-        return render_template("admin-login.html", msg=msg)
+    if 'admin' not in session.keys():
+        return redirect("/")
     if request.method == "GET":
         events = db.execute(allEventQry)
         return render_template("admin-events.html", events=events)
@@ -462,22 +453,34 @@ def adminEvents():
 @app.route("/admin-venues", methods=["GET"])
 @login_required
 def adminVenues():
-    if not session["admin"]:
-        msg = "You must be an admin to access that page. Please log in."
-        return render_template("admin-login.html", msg=msg)
+    if 'admin' not in session.keys():
+        return redirect("/")
     if request.method == "GET":
         venues = db.execute(allVenueQry)
         return render_template("admin-venues.html", venues=venues)
 
-@app.route("/admin-ticketSales", methods=["GET"])
+@app.route("/admin-reservations", methods=["GET", "POST"])
 @login_required
-def adminTicketSales():
-    if not session["admin"]:
-        msg = "You must be an admin to access that page. Please log in."
-        return render_template("admin-login.html", msg=msg)
-    if request.method == "GET":
-        events = db.execute(adminReservations)
-        return render_template("admin-ticketSales.html", events=events)
+def admin_Reservations():
+    if 'admin' not in session.keys():
+        return redirect("/")
+    if request.method == "POST":
+        user = db.execute("SELECT * FROM users WHERE userID = :userID", userID=request.form.get("userID"))
+        userTicket = db.execute(userReservations, userID=request.form.get("userID"))
+        remover = []
+        for tic in userTicket:
+            if tic["totalTickets"] == 0:
+                remover.append(tic)
+            confirmation = "T"
+            tran = int(tic["tranID"]) + 12340
+            confirmation = confirmation + str(tran)
+            tic["confirmation"] = confirmation
+        userTickets = [x for x in userTicket if x not in remover]
+        return render_template("admin-reservations.html", userTickets=userTickets, user=user[0])
+    else:
+        users = db.execute("SELECT * FROM users")
+        return render_template("admin-users.html", users=users)
+
 
 
 
@@ -486,9 +489,8 @@ def adminTicketSales():
 @app.route("/add-venue", methods=["GET", "POST"])
 @login_required
 def addVenue():
-    if not session["admin"]:
-        msg = "You must be an admin to access that page. Please log in."
-        return render_template("admin-login.html", msg=msg)
+    if 'admin' not in session.keys():
+        return redirect("/")
 
     if request.method == "POST":
         if not request.form.get("venueName"):
@@ -522,9 +524,8 @@ def addVenue():
 @app.route("/add-event", methods=["GET", "POST"])
 @login_required
 def addEvent():
-    if not session["admin"]:
-        msg = "You must be an admin to access that page. Please log in."
-        return render_template("admin-login.html", msg=msg)
+    if 'admin' not in session.keys():
+        return redirect("/")
 
     if request.method == "POST":
 
@@ -575,6 +576,8 @@ def addEvent():
 @app.route("/edit-venue/<venueID>", methods=["GET", "POST"])
 @login_required
 def edit_Venue(venueID):
+    if 'admin' not in session.keys():
+        return redirect("/")
     if request.method == "POST":
         if not venueID:
             msg = "no venue id"
@@ -600,6 +603,8 @@ def edit_Venue(venueID):
 @app.route("/edit-event/<eventID>", methods=["GET", "POST"])
 @login_required
 def edit_Event(eventID):
+    if 'admin' not in session.keys():
+        return redirect("/")
     if request.method == "POST":
         if not eventID:
             msg = "no event id"

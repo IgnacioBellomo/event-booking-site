@@ -1,41 +1,37 @@
 {% extends "baseadmin.html" %}
 
-{% block title %}Reservations{% endblock %}
+{% block title %}User #{{user.userID}}'s Reservations{% endblock %}
 
 {% block body %}
 
-<table class="table table-bordered">
+<table class="table table-bordered" id="myTable">
   <thead class="thead-light">
     <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Created</th>
+      <th scope="col">Booked</th>
       <th scope="col">Conf #</th>
-      <th scope="col">Name</th>
-      <th scope="col">Venue</th>
       <th scope="col">Event</th>
+      <th scope="col">Venue</th>
       <th scope="col">Event Day</th>
       <th scope="col">Event Time</th>
       <th scope="col">Number of Tickets</th>
     </tr>
   </thead>
   <tbody>
-    {% for # in # %}
+    {% for tic in userTickets %}
     <tr>
-      <th scope="row">{{#.tranID}}</th>
-      <th scope="row">{{#.time}}</th>
-      <th scope="row">{{#.confirmation}}</th>
-      <td scope="row">{{#.fname}} {{#.lname}}</td>
-      <td scope="row">{{#.venueID}}</td>
-      <td scope="row">{{#.eventID}}</td>
-      <td scope="row">{{#.startDate}}</td>
-      <td scope="row">{{#.startTime}}</td>
-      <td scope="row">{{#.tickets}}</td>
+      <th scope="row">{{tic["time"]}}</th>
+      <th scope="row">{{tic["confirmation"]}}</th>
+      <td scope="row">{{tic["eventName"]}}</td>
+      <td scope="row">{{tic["venueName"]}}</td>
+      <td scope="row">{{tic["startDate"]}}</td>
+      <td scope="row">{{tic["startTime"]}}</td>
+      <td scope="row">{{tic["totalTickets"]}}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
 
-{% endblock %}
+{%endblock %}
 
-{% block script %}{% endblock %}
+{% block script %} <script src="static/script/sorting.js" ></script> {% endblock %}

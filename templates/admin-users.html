@@ -1,0 +1,38 @@
+{% extends "baseadmin.html" %}
+
+{% block title %}Reservations{% endblock %}
+
+{% block body %}
+
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Zip Code</th>
+      <th scope="col">Tickets</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <th scope="row">{{user.userID}}</th>
+      <th scope="row">{{user.fName}} {{user.lName}}</th>
+      <th scope="row">{{user.email}}</th>
+      <td scope="row">{{user.zip}}</td>
+      <td scope="row">
+        <form action="/admin-reservations" method="post">
+        <input type='hidden' name="userID" value="{{ user.userID }}"/>
+        <button class="btn btn-primary" type="submit" id="post">See tickets</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
+
+{% block script %}{% endblock %}
