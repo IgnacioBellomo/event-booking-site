@@ -7,23 +7,20 @@
 <br>
 <div class="card" centered>
     <div class="card-header">
-        <p>{{event.eventType}}</p>
+        <p><span style="font-size:14px">Event Type:</span> {{ event.type }}</p>
     </div>
     <div class="card-body">
-        <h4 class="card-title">{{ event.eventName }}</h4>
+        <h3 class="card-title">{{ event.eventName }}</h3>
         <p class="card-text">{{ event.description }}</p>
     </div>
     <div class="card-footer text-muted">
-        <p>{{event.venueID}}</p>
-        <p>{{event.startDate}}</p>
-        <p>{{event.startTime}}</p>
-        <p>{{event.endDate}}</p>
-        <p>{{event.endTime}}</p>
-        <p>Tickets Left:</p>
-        <p>{{ event.ticketsLeft }}</p>
+        <p>{{event.venueName}}</p>
+        <p>Event Starts: {{ event.startDate }} at {{ event.startTime }}</p>
+        <p>Event Ends: {{ event.endDate }} at {{ event.endTime }}</p>
+        <p>Tickets Left: {{ event.ticketsLeft }}</p>
 
     </div>
-        <a href="{{ '/book/%s'%event.eventID|urlencode }}" class="btn btn-primary">Book</a>
+        <a href="{{ '/book/%s'%event.eventID|urlencode }}" class="btn btn-success">Book</a>
     </div>
 
 
