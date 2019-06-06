@@ -455,3 +455,5 @@ def addVenue():
             db.execute(newVenue, venueName=request.form.get("venueName"), capacity=request.form.get("capacity"), address1=request.form.get("venueAddress1"), address2=request.form.get("venueAddress2"), city=request.form.get("venueCity"), state=request.form.get("state"), zipCode=request.form.get("zip"), adminID=session["user_id"])
             msg = "Venue created"
             return render_template("confirmation.html", msg=msg)
+    else:
+        return render_template("addNewVenue.html")
