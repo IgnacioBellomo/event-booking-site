@@ -334,6 +334,7 @@ def admin_Login():
             return render_template("error.html", msg=msg)
 
         else:
+
             """Check password against hash using hash function"""
 
             email=request.form["email"]
@@ -350,8 +351,8 @@ def admin_Login():
                 session["user_id"] = verifyAdmin[0]["adminID"]
                 session["admin"] = "yes"
 
-                # Redirect user to admin home page
-                return redirect("/admin")
+            # Redirect user to admin home page
+            return redirect("/admin")
     else:
 
         return render_template("admin-login.html")
@@ -360,7 +361,9 @@ def admin_Login():
 @app.route("/admin", methods=["GET"])
 @login_required
 def admin():
+
     if request.method == "GET":
+
         if not session["admin"]:
             msg = "You must be an admin to access that page. Please log in."
             return render_template("admin-login.html", msg=msg)
@@ -383,10 +386,11 @@ def adminRegister():
     if request.method == "POST":
 
         # Form validation
-        if not request.form.get("adminCode"):
+        if request.form.get("adminCode") != adminCode:
             msg = "You didn't enter an admin code."
-            return render_template("error")
-        if not request.form.get("email"):
+            return render_template("error.html", msg=msg)
+
+        elif not request.form.get("email"):
             msg = "You didn't enter an email."
             return render_template("error.html", msg=msg)
 
@@ -440,6 +444,7 @@ def adminEvents():
     events = db.execute(allEventQry)
 
     if events:
+
         return render_template("admin-events.html", events=events)
 
 @app.route("/add-venue", methods=["GET", "POST"])
